@@ -1,7 +1,10 @@
-import Image from 'next/image'
+import { ThemeModeToggle } from '@/components/common/theme-mode-toggle'
 
 export default function Home() {
   return (
-    <div><h1>Hello World!</h1></div>
+    <div>
+      <ThemeModeToggle />
+      <h1 className='font-mono'>Hello World!</h1>
+    </div>
   )
 }

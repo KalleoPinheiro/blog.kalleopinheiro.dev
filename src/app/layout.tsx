@@ -1,15 +1,18 @@
+import { ThemeProvider } from '@/components/common/theme-provider'
 import type { Metadata } from 'next'
 import { Inter, Source_Code_Pro } from 'next/font/google'
-import './globals.css'
 import { ReactNode } from 'react'
+import './globals.css'
 
 const interSans = Inter({
-  subsets: ["latin"],
-});
+  variable: '--font-inter-sans',
+  subsets: ['latin']
+})
 
 const sourceCodeMono = Source_Code_Pro({
-  subsets: ["latin"],
-});
+  variable: '--font-source-code-mono',
+  subsets: ['latin']
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,11 +25,18 @@ export default function RootLayout({
   children: ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
-        className={`${interSans.className} ${sourceCodeMono.className} antialiased`}
+        className={`${interSans.variable} ${sourceCodeMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
