@@ -1,36 +1,166 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧭 Roadmap — Blog Pessoal de Aprendizado
 
-## Getting Started
+> Este roadmap detalha as etapas de desenvolvimento e manutenção do blog pessoal, que servirá como um repositório de aprendizados e experiências acumuladas em desenvolvimento web ao longo de 10 anos.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🧱 Milestone 1 — Concepção e Estratégia
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Objetivo:** Definir propósito, público, nome e estrutura de conteúdo.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Issues**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [ ] Redigir manifesto pessoal do blog (missão, visão, propósito)
+- [ ] Definir público-alvo e estilo de linguagem
+- [ ] Mapear tipos de conteúdo (posts técnicos, reflexões, diários de aprendizado)
+- [ ] Escolher nome e verificar disponibilidade de domínio
+- [ ] Criar documento de escopo do projeto
 
-## Learn More
+📅 **Duração estimada:** 1 semana  
+🔗 **Dependência:** Nenhuma
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧭 Milestone 2 — Arquitetura e Planejamento
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Objetivo:** Escolher stack, estruturar repositório e planejar convenções de desenvolvimento.
 
-## Deploy on Vercel
+**Issues**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [ ] Definir stack tecnológica (Next.js + TypeScript + TailwindCSS + MDX)
+- [ ] Criar repositório GitHub com README inicial
+- [ ] Configurar `.editorconfig`, `.gitignore`, ESLint e Prettier
+- [ ] Criar estrutura inicial de diretórios (`/pages`, `/components`, `/lib`, `/styles`)
+- [ ] Definir convenções de commits (Conventional Commits)
+- [ ] Criar roadmap inicial (este documento 😄)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📅 **Duração estimada:** 1 semana  
+🔗 **Dependência:** Milestone 1
+
+---
+
+## 🎨 Milestone 3 — Identidade Visual e Design
+
+**Objetivo:** Construir o design system e wireframes no Figma.
+
+**Issues**
+
+- [ ] Criar moodboard de inspiração
+- [ ] Definir paleta de cores, tipografia e estilos de componentes
+- [ ] Criar wireframes (Home, Post, About)
+- [ ] Gerar mockups de alta fidelidade
+- [ ] Documentar tokens de design (spacing, color, font, radius)
+
+📅 **Duração estimada:** 2 semanas  
+🔗 **Dependência:** Milestone 2
+
+---
+
+## 💻 Milestone 4 — Desenvolvimento da Base
+
+**Objetivo:** Implementar layout, rotas principais e componentes reutilizáveis.
+
+**Issues**
+
+- [ ] Inicializar projeto com Next.js e TailwindCSS
+- [ ] Implementar layout base (Navbar, Footer, Layout principal)
+- [ ] Criar componentes `Button`, `Card`, `PostList`, `PostPreview`
+- [ ] Implementar páginas básicas (`/`, `/posts/[slug]`, `/about`)
+- [ ] Adicionar suporte a MDX e parser de metadados (frontmatter)
+
+📅 **Duração estimada:** 3 semanas  
+🔗 **Dependência:** Milestone 3
+
+---
+
+## 🗄️ Milestone 5 — CMS e Conteúdo
+
+**Objetivo:** Criar fluxo de criação de conteúdo e gerenciamento de posts.
+
+**Issues**
+
+- [ ] Definir formato de conteúdo (Markdown ou CMS headless)
+- [ ] Implementar sistema de build estático com Contentlayer
+- [ ] Criar scripts para geração de novos posts
+- [ ] Implementar listagem de posts e busca
+- [ ] Adicionar paginação
+
+📅 **Duração estimada:** 2 semanas  
+🔗 **Dependência:** Milestone 4
+
+---
+
+## ☁️ Milestone 6 — Deploy e Infraestrutura
+
+**Objetivo:** Publicar e automatizar o ciclo de deploy.
+
+**Issues**
+
+- [ ] Configurar CI/CD (GitHub Actions + Vercel)
+- [ ] Conectar domínio personalizado
+- [ ] Configurar Analytics e monitoramento (Plausible ou GA4)
+- [ ] Criar backup automatizado dos posts
+- [ ] Testar build e performance em produção
+
+📅 **Duração estimada:** 1 semana  
+🔗 **Dependência:** Milestone 5
+
+---
+
+## 🚀 Milestone 7 — SEO, Acessibilidade e Performance
+
+**Objetivo:** Garantir que o blog seja rápido, acessível e fácil de encontrar.
+
+**Issues**
+
+- [ ] Implementar SEO base (title, meta, OG tags)
+- [ ] Adicionar sitemap e robots.txt
+- [ ] Revisar acessibilidade (ARIA, contraste, navegação por teclado)
+- [ ] Testar performance (Lighthouse e Web Vitals)
+- [ ] Ajustar imagens e lazy loading
+
+📅 **Duração estimada:** 1 semana  
+🔗 **Dependência:** Milestone 6
+
+---
+
+## 🔁 Milestone 8 — Crescimento e Manutenção Contínua
+
+**Objetivo:** Planejar a evolução do blog e automatizar processos.
+
+**Issues**
+
+- [ ] Criar sistema de comentários (giscus ou utterances)
+- [ ] Adicionar RSS feed e integração com newsletter
+- [ ] Escrever guia de contribuição e manutenção
+- [ ] Criar cronograma editorial (posts mensais)
+- [ ] Revisar e atualizar documentação do projeto
+
+📅 **Duração estimada:** Contínuo  
+🔗 **Dependência:** Milestone 7
+
+---
+
+## 💡 Estrutura sugerida no GitHub Project
+
+| Status | Exemplos de Cards |
+|:--|:--|
+| **Backlog** | “Criar manifesto pessoal”, “Escolher stack tecnológica” |
+| **Em progresso** | “Implementar layout base”, “Criar mockups” |
+| **Revisão** | “Configurar CI/CD”, “Revisar acessibilidade” |
+| **Concluído** | “Definir paleta de cores”, “Publicar no Vercel” |
+
+---
+
+📘 **Legenda**
+
+- **🧱** Planejamento e base conceitual  
+- **🎨** Design e identidade visual  
+- **💻** Desenvolvimento técnico  
+- **☁️** Infraestrutura e deploy  
+- **🚀** Otimização  
+- **🔁** Manutenção contínua  
+
+---
+
+> _“Aprender construindo é o caminho mais sólido — este blog é a prova viva disso.”_
