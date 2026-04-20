@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  emailVerified DateTime?
+  username      String   @unique
+  displayName   String
+  bio           String?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  articles Article[]
+  comments Comment[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model Article {
+  id                   String   @id @default(cuid())
+  slug                 String   @unique
+  title                String   @db.VarChar(200)
+  summary              String?  @db.VarChar(300)
+  content              String   // Markdown content
+  htmlContent          String?  // Cached HTML
+  status               ArticleStatus @default(DRAFT)
+  readingTimeMinutes   Int?
+  viewCount            Int      @default(0)
+
+  publishedAt          DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relations
+  authorId             String
+  author               User     @relation(fields: [authorId], references: [id])
+
+  categoryId           String?
+  category             Category? @relation(fields: [categoryId], references: [id])
+
+  articleTags          ArticleTag[]
+  comments             Comment[]
+
+  @@index([slug])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([createdAt])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  articles    Article[]
+
+  @@index([slug])
+  @@index([name])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  // Relations
+  articleTags ArticleTag[]
+
+  @@index([slug])
+  @@index([name])
+}
+
+// Junction table for Article <-> Tag many-to-many relationship
+model ArticleTag {
+  articleId String
+  tagId     String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+  @@index([tagId])
+}
+
+model Comment {
+  id             String   @id @default(cuid())
+  content        String   @db.Text
+  status         CommentStatus @default(APPROVED)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  articleId      String
+  article        Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  authorId       String?
+  author         User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  authorName     String?  // For guest comments
+  authorEmail    String?  // For guest comments
+
+  parentCommentId String?
+  parentComment  Comment? @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies        Comment[] @relation("CommentReplies")
+
+  @@index([articleId])
+  @@index([createdAt])
+  @@index([status])
+  @@index([authorId])
+}
+
+// Enums
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
