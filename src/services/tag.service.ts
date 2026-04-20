@@ -98,13 +98,7 @@ export async function deleteTag(id: string): Promise<void> {
 export async function getPopularTags(limit: number = 10): Promise<Tag[]> {
   const tags = await prisma.tag.findMany({
     include: {
-      articleTags: {
-        include: {
-          article: {
-            where: { status: "PUBLISHED" },
-          },
-        },
-      },
+      articleTags: true,
     },
     orderBy: { articleTags: { _count: "desc" } },
     take: limit,

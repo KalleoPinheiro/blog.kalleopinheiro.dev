@@ -18,19 +18,19 @@ export interface Article {
   id: string;
   slug: string;
   title: string;
-  summary?: string;
+  summary?: string | null;
   content: string;
-  htmlContent?: string;
+  htmlContent?: string | null;
   status: ArticleStatus;
-  readingTimeMinutes?: number;
+  readingTimeMinutes?: number | null;
   viewCount: number;
-  publishedAt?: Date;
+  publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
   authorId: string;
   author?: User;
-  categoryId?: string;
-  category?: Category;
+  categoryId?: string | null;
+  category?: Category | null;
   tags?: Tag[];
   comments?: Comment[];
 }
@@ -40,7 +40,7 @@ export interface Category {
   id: string;
   name: string;
   slug: string;
-  description?: string;
+  description?: string | null;
   createdAt: Date;
   updatedAt: Date;
   articles?: Article[];

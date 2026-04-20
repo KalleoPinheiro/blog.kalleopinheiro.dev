@@ -1,19 +1,9 @@
-import { afterAll, afterEach, beforeAll } from "vitest";
-
-// Setup global test environment
-beforeAll(() => {
-  // Initialize test environment
-  process.env.NODE_ENV = "test";
-});
+import { afterEach, vi } from "vitest";
 
 afterEach(() => {
   // Cleanup after each test
   vi.clearAllMocks();
 });
 
-afterAll(() => {
-  // Final cleanup
-});
-
 // Mock fetch for API tests if needed
-global.fetch = vi.fn();
+global.fetch = vi.fn() as any;

@@ -74,12 +74,13 @@ import { articleUpdateSchema } from "@/lib/validation/schemas";
  */
 
 interface Params {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(_request: NextRequest, { params }: Params) {
   try {
-    const article = await getArticle(params.id);
+    const { id } = await params;
+    const article = await getArticle(id);
     return apiSuccess(article);
   } catch (error) {
     return apiError(error);
@@ -88,19 +89,21 @@ export async function GET(request: NextRequest, { params }: Params) {
 
 export async function PATCH(request: NextRequest, { params }: Params) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const validated = articleUpdateSchema.partial().parse(body);
 
-    const article = await updateArticle(params.id, validated);
+    const article = await updateArticle(id, validated);
     return apiSuccess(article, "Article updated successfully");
   } catch (error) {
     return apiError(error);
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(_request: NextRequest, { params }: Params) {
   try {
-    await deleteArticle(params.id);
+    const { id } = await params;
+    await deleteArticle(id);
     return apiSuccess(null, "Article deleted successfully", 204);
   } catch (error) {
     return apiError(error);
@@ -138,7 +141,8 @@ export async function POST(request: NextRequest, { params }: Params) {
 
   if (pathname.includes("/publish")) {
     try {
-      const article = await publishArticle(params.id);
+      const { id } = await params;
+      const article = await publishArticle(id);
       return apiSuccess(article, "Article published successfully");
     } catch (error) {
       return apiError(error);

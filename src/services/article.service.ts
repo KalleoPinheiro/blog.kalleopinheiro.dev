@@ -14,11 +14,7 @@ import {
   slugify,
   generateExcerpt,
 } from "@/lib/utils/string";
-import {
-  NotFoundError,
-  ConflictError,
-  ValidationError,
-} from "@/lib/utils/errors";
+import { NotFoundError, ConflictError } from "@/lib/utils/errors";
 
 export async function createArticle(
   data: ArticleCreate & { authorId: string }
