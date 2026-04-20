@@ -1,0 +1,7 @@
+{
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "aliasPrefix": "@",
+  "componentDirectory": "src/components/ui"
+}

@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+     "vercel": {
+      "command": "npx",
+      "args": ["-y", "@vercel/mcp"]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    }
+  }
+}
