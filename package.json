@@ -75,7 +75,6 @@
     "postcss": "^8.4.31",
     "@playwright/test": "^1.40.0",
     "@types/swagger-jsdoc": "^6.0.0",
-    "@types/swagger-ui-express": "^4.1.0",
     "@vitejs/plugin-react": "^4.2.0"
   },
   "engines": {
