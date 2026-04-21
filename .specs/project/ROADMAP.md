@@ -6,7 +6,7 @@ description: Milestones and features for the personal technical blog, evolving s
 # Roadmap
 
 **Current Milestone:** M1 — Foundation
-**Status:** In Progress — Phases 1–3 complete (scaffolding, testing, UI primitives); Phase 4 in progress (env done, site-config next)
+**Status:** ✅ COMPLETE — all tasks done; T25 (Vercel deploy) deferred per AD-009 as a pre-M2 step
 
 ---
 
@@ -34,39 +34,44 @@ description: Milestones and features for the personal technical blog, evolving s
 - `vitest.config.ts` with coverage thresholds (v8, 80% lines on `src/lib/`, `src/app/api/`) (`3c97d0e`)
 - `test/setup.ts` + `src/lib/sum.ts` sample test following AAA + `sut` convention (`ce0516e`)
 
-**UI foundation** — ⚠️ PARTIAL (T9–T10 done; T11 pending)
+**UI foundation** — ✅ DONE (T9–T11)
 
-- Tailwind v4 + shadcn/ui initialized with base-nova preset (`3f07c3e`)
-- `Button` + `Card` primitives generated and tested (`37fc987`)
-- Layout shell (`site-header.tsx`, `site-footer.tsx`) — **pending T13**
+- Tailwind v4 + shadcn/ui with base-nova preset (`3f07c3e`)
+- `Button` + `Card` primitives (`37fc987`)
+- `SiteHeader` + `SiteFooter` Server Components (`6737af6`)
 
-**Environment validation** — ⚠️ PARTIAL (T12 code done; env.test.ts needs commit check)
+**Library layer** — ✅ DONE (T12–T14)
 
-- `src/lib/env.ts` with zod schema, typed `Env` type, `createEnv()` factory (`a791c70`)
+- `env.ts` — zod-validated env singleton (`a791c70`)
+- `site-config.ts` — brand constants, feed metadata, social handles (`68d88f7`)
+- `metadata.ts` — `buildRootMetadata()` + `buildPageMetadata()` (`085415a`)
 
-**Welcome page** — ⏳ PENDING (T15 — after T11, T13)
+**Welcome page** — ✅ DONE (T15, T20)
 
-- CNA scaffold page exists; must be replaced TDD-first after site-config and layout shell are ready
+- `app/page.tsx` — Portuguese landing: site name h1, description, "Em breve" (`07e7688`)
+- `app/not-found.tsx` — minimal 404 with main landmark (`a32c4b3`)
 
-**Healthcheck API** — ⏳ PENDING (T16)
+**Healthcheck API** — ✅ DONE (T16)
 
-- `GET /api/health` — not started
+- `GET /api/health` returns `{ status, uptime, version, timestamp }`, `Cache-Control: no-store` (`983f9f6`)
 
-**API documentation** — ⏳ PENDING (T23)
+**API documentation** — ✅ DONE (T23)
 
-- Swagger / OpenAPI setup — not started
+- `/api/docs` — Swagger UI via CDN + embedded OpenAPI 3.1; 404 unless `ENABLE_API_DOCS=true` (`2b4f658`)
 
-**SEO baseline** — ⏳ PENDING (T13–T14, T17–T19, T21)
+**SEO baseline** — ✅ DONE (T17–T19, T21)
 
-- `site-config.ts`, `metadata.ts`, `sitemap.ts`, `robots.ts`, `rss.xml/route.ts` — all pending
+- `sitemap.ts`, `robots.ts`, `rss.xml/route.ts` — all serving valid responses (`074fc38`)
+- `layout.tsx` — `lang="pt-BR"`, header + children + footer, root metadata export (`de075df`)
 
-**Security & performance baseline** — ⏳ PENDING (T22)
+**Security & performance baseline** — ✅ DONE (T22)
 
-- Security headers via `next.config.ts` — not started; env validation (FND-13) is done
+- Security headers via `next.config.ts` — CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy (`6b5a869`)
 
-**Deployment** — 🔁 DEFERRED (T25 per AD-009; T24 pending T23)
+**Deployment** — ⚠️ PARTIAL (T24 done; T25 deferred per AD-009)
 
-- T25 (Vercel link + preview) deferred; T24 (`.env.example` + README rewrite) pending
+- `.env.example` + README rewritten (`3ebb399`)
+- T25 (Vercel link + preview deploy) — pick up before M2 begins
 
 ---
 

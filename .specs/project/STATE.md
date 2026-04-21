@@ -6,7 +6,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 # State
 
 **Last Updated:** 2026-04-21
-**Current Work:** M1 — Foundation — T11 complete; Phase 5 in progress (T15 welcome page next)
+**Current Work:** M1 — Foundation ✅ COMPLETE (T25 Vercel deploy deferred); ready for M2
 
 ---
 
@@ -106,6 +106,16 @@ _None yet._
 | T13  | site-config.ts + SiteConfig type       | `68d88f7` | 2026-04-21 |
 | T14  | metadata.ts — buildRootMetadata/Page   | `085415a` | 2026-04-21 |
 | T11  | SiteHeader + SiteFooter Server Components | `6737af6` | 2026-04-21 |
+| T15  | Welcome page — Portuguese landing (TDD)   | `07e7688` | 2026-04-21 |
+| T16  | GET /api/health endpoint                  | `983f9f6` | 2026-04-21 |
+| T17  | app/sitemap.ts                            | `074fc38` | 2026-04-21 |
+| T18  | app/robots.ts                             | `074fc38` | 2026-04-21 |
+| T19  | app/rss.xml/route.ts                      | `074fc38` | 2026-04-21 |
+| T20  | app/not-found.tsx                         | `a32c4b3` | 2026-04-21 |
+| T21  | Root layout — header + footer + metadata  | `de075df` | 2026-04-21 |
+| T22  | Security headers in next.config.ts        | `6b5a869` | 2026-04-21 |
+| T23  | /api/docs Swagger UI (CDN, gated)         | `2b4f658` | 2026-04-21 |
+| T24  | .env.example + README rewrite             | `3ebb399` | 2026-04-21 |
 
 **Note:** T8 (check script) is ✅ partially done — script works, README pending T24. T12 env.test.ts is committed in `a791c70` but was untracked at session start; verify with `git status`.
 
