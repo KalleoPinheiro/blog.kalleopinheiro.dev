@@ -6,7 +6,7 @@ description: Milestones and features for the personal technical blog, evolving s
 # Roadmap
 
 **Current Milestone:** M1 — Foundation
-**Status:** Planning
+**Status:** In Progress — Phases 1–3 complete (scaffolding, testing, UI primitives); Phase 4 in progress (env done, site-config next)
 
 ---
 
@@ -17,70 +17,56 @@ description: Milestones and features for the personal technical blog, evolving s
 
 ### Features
 
-**Project scaffolding** — PLANNED
+**Project scaffolding** — ✅ DONE (T1–T4)
 
-- Next.js (latest stable) with App Router + strict TypeScript
-- Path aliases and base `tsconfig` tuned for strictness
-- Folder convention documented in `.specs/codebase/STRUCTURE.md`
+- Next.js 16.2.4 with App Router + strict TypeScript (`d6d11b8`, `ff8147f`)
+- Path aliases (`@/*` → `src/*`) and strict tsconfig flags (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
+- Biome configured for lint + format with `noExplicitAny=error` (`f7b8c32`)
 
-**Tooling setup** — PLANNED
+**Tooling setup** — ✅ DONE (T3–T4)
 
-- Biome configured for lint + format (replaces ESLint/Prettier)
-- `package.json` scripts: `dev`, `build`, `start`, `lint`, `format`, `typecheck`, `test`, `test:watch`, `test:coverage`
-- Git hooks (optional, lean): pre-commit format + typecheck on staged files
+- Biome 2.2.0 — lint + format (replaces ESLint/Prettier)
+- `package.json` scripts: all 10 defined (`dev`, `build`, `start`, `lint`, `format`, `typecheck`, `test`, `test:watch`, `test:coverage`, `check`)
 
-**Testing foundation (TDD)** — PLANNED
+**Testing foundation (TDD)** — ✅ DONE (T5–T7)
 
-- Vitest configured for unit + integration tests (JSDOM env for component tests)
-- React Testing Library + `@testing-library/jest-dom` matchers
-- Sample tests following AAA pattern with `sut` naming convention
-- Coverage thresholds set (and enforced in CI for touched files)
-- Test file colocation convention documented (`foo.ts` → `foo.test.ts`)
-- Every M1 feature below is delivered TDD-first (failing test → implementation → refactor)
+- Vitest 4.1.5 + jsdom + RTL + `@testing-library/jest-dom` installed (`03da6e2`)
+- `vitest.config.ts` with coverage thresholds (v8, 80% lines on `src/lib/`, `src/app/api/`) (`3c97d0e`)
+- `test/setup.ts` + `src/lib/sum.ts` sample test following AAA + `sut` convention (`ce0516e`)
 
-**UI foundation** — PLANNED
+**UI foundation** — ⚠️ PARTIAL (T9–T10 done; T11 pending)
 
-- Tailwind CSS configured (with Tailwind v4 if stable)
-- shadcn/ui initialized with base tokens
-- Minimal layout shell (header, main, footer placeholders)
+- Tailwind v4 + shadcn/ui initialized with base-nova preset (`3f07c3e`)
+- `Button` + `Card` primitives generated and tested (`37fc987`)
+- Layout shell (`site-header.tsx`, `site-footer.tsx`) — **pending T13**
 
-**Welcome page** — PLANNED
+**Environment validation** — ⚠️ PARTIAL (T12 code done; env.test.ts needs commit check)
 
-- `/` route with a minimal, accessible landing
-- Brand/site name, one-line intro, "coming soon" or equivalent
-- Uses shadcn primitives for visual consistency
+- `src/lib/env.ts` with zod schema, typed `Env` type, `createEnv()` factory (`a791c70`)
 
-**Healthcheck API** — PLANNED
+**Welcome page** — ⏳ PENDING (T15 — after T11, T13)
 
-- `GET /api/health` returns `{ status, uptime, version, timestamp }`
-- Documented in OpenAPI spec
-- No auth; suitable for Vercel monitors / uptime pings
+- CNA scaffold page exists; must be replaced TDD-first after site-config and layout shell are ready
 
-**API documentation** — PLANNED
+**Healthcheck API** — ⏳ PENDING (T16)
 
-- Swagger / OpenAPI setup for API route documentation
-- Single source of truth for route contracts
-- Served at `/api/docs` (dev-only or gated in production)
+- `GET /api/health` — not started
 
-**SEO baseline** — PLANNED
+**API documentation** — ⏳ PENDING (T23)
 
-- Root `metadata` export (title template, description, OG defaults)
-- `sitemap.xml` (dynamic, ready to grow with content)
-- `robots.txt`
-- RSS feed endpoint (empty collection initially, ready for posts)
-- Favicon + social share image placeholders
+- Swagger / OpenAPI setup — not started
 
-**Security & performance baseline** — PLANNED
+**SEO baseline** — ⏳ PENDING (T13–T14, T17–T19, T21)
 
-- Security headers via `next.config` (CSP, HSTS, X-Frame-Options, Referrer-Policy)
-- Image component defaults
-- Environment variable handling pattern (typed via `zod`)
+- `site-config.ts`, `metadata.ts`, `sitemap.ts`, `robots.ts`, `rss.xml/route.ts` — all pending
 
-**Deployment** — PLANNED
+**Security & performance baseline** — ⏳ PENDING (T22)
 
-- Vercel project linked
-- Preview deployments per branch
-- Production on `main`
+- Security headers via `next.config.ts` — not started; env validation (FND-13) is done
+
+**Deployment** — 🔁 DEFERRED (T25 per AD-009; T24 pending T23)
+
+- T25 (Vercel link + preview) deferred; T24 (`.env.example` + README rewrite) pending
 
 ---
 

@@ -6,7 +6,7 @@ description: Architecture, folder structure, and component contracts for the M1 
 # Foundation (M1) Design
 
 **Spec**: `.specs/features/foundation/spec.md`
-**Status**: Draft
+**Status**: In Progress — Phase 1–3 complete; Phase 4 (T12 done, T13/T14 pending); Phases 5–7 pending
 
 > Architectural decisions that justify this design are already captured in `.specs/project/STATE.md` as AD-001..AD-007. This document covers the concrete **layout and contracts** that realize those decisions.
 
@@ -93,11 +93,24 @@ personal-blog/
 
 - **Purpose**: Validate and type environment variables at startup. Crash fast on misconfiguration.
 - **Interface**:
-  - `export const env: Env` — frozen, typed object of validated variables
+  - `export const env: Env` — typed singleton, validated at module load
+  - `export function createEnv(): Env` — factory, re-validates on each call (used directly in tests)
   - `export type Env = z.infer<typeof envSchema>`
-- **Dependencies**: `zod`
-- **Reuses**: none (new)
-- **Key behavior**: Parses `process.env` once at import time. Splits server-only vars from `NEXT_PUBLIC_*` vars. Server-only vars must not be imported from client components — enforced by naming convention and a Biome rule if feasible.
+- **Dependencies**: `zod` (v4.3.6)
+- **Status**: ✅ Implemented (`a791c70`); `env.test.ts` untracked — must be committed
+- **Key behavior**: Parses `process.env` once at import time via `createEnv()`. Fails fast with a Zod error on missing required vars.
+
+**As designed vs. as implemented:**
+
+| Field                  | Design spec                                 | Actual implementation          | Notes                              |
+| ---------------------- | ------------------------------------------- | ------------------------------ | ---------------------------------- |
+| `NODE_ENV`             | `z.enum(["development","test","production"])` | `z.string().default("development")` | Simpler; avoids jsdom env conflicts |
+| `NEXT_PUBLIC_SITE_URL` | `z.string().url()`                          | `z.string()`                   | `.url()` useful once env setup stabilizes |
+| `ENABLE_API_DOCS`      | `z.enum(["true","false"]).default("false")` | `z.string().default("false")`  | Acceptable; non-"true" treated as false at usage site |
+| `env` mutability       | frozen object                               | plain `const`                  | Module-scope `const` is sufficient; freeze adds no real safety here |
+| Schema split           | Two schemas (server + public)               | One schema                     | YAGNI — add split when a second `NEXT_PUBLIC_*` var appears |
+
+All divergences are intentional KISS/YAGNI decisions. The stricter types can be added incrementally without breaking existing tests.
 
 ### `src/lib/site-config.ts` — Site constants
 
@@ -164,13 +177,16 @@ interface HealthPayload {
 ### Env schema (FND-13)
 
 ```ts
+// Actual implementation (env.ts — commit a791c70)
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]),
+  NODE_ENV: z.string().default("development"),
+  NEXT_PUBLIC_SITE_URL: z.string(),          // required; no .url() until test setup improves
   APP_VERSION: z.string().default("dev"),
-  NEXT_PUBLIC_SITE_URL: z.string().url(),
-  ENABLE_API_DOCS: z.enum(["true", "false"]).default("false"),
+  ENABLE_API_DOCS: z.string().default("false"),
 })
 ```
+
+> See the "As designed vs. as implemented" table in the `env.ts` module contract above for the rationale behind each divergence from the original design.
 
 ---
 

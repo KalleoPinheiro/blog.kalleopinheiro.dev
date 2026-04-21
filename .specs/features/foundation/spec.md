@@ -181,25 +181,25 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 
 ## Requirement Traceability
 
-| Requirement ID | Story                              | Phase    | Status  |
-| -------------- | ---------------------------------- | -------- | ------- |
-| FND-01         | P1: Deployable scaffold            | Tasks    | Pending |
-| FND-02         | P1: Deployable scaffold (strict TS)| Tasks    | Pending |
-| FND-03         | P1: Deployable scaffold (Biome)    | Tasks    | Pending |
-| FND-04         | P1: TDD-ready test harness         | Tasks    | Pending |
-| FND-05         | P1: Deployable scaffold (UI)       | Tasks    | Pending |
-| FND-06         | P1: Welcome page                   | Tasks    | Pending |
-| FND-07         | P1: Healthcheck endpoint           | Tasks    | Pending |
-| FND-08         | P1: SEO baseline (sitemap)         | Tasks    | Pending |
-| FND-09         | P1: SEO baseline (robots)          | Tasks    | Pending |
-| FND-10         | P1: SEO baseline (RSS)             | Tasks    | Pending |
-| FND-11         | P1: SEO baseline (root metadata)   | Tasks    | Pending |
-| FND-12         | P1: Security baseline (headers)    | Tasks    | Pending |
-| FND-13         | P1: Security baseline (env schema) | Tasks    | Pending |
-| FND-14         | P2: API documentation (Swagger)    | Tasks    | Pending |
-| FND-15         | P2: Vercel deployment              | Tasks    | Pending |
+| Requirement ID | Story                              | Tasks        | Status                                          |
+| -------------- | ---------------------------------- | ------------ | ----------------------------------------------- |
+| FND-01         | P1: Deployable scaffold            | T1, T4, T8   | ✅ Done (T1, T4 done; T8 script done, README pending T24) |
+| FND-02         | P1: Deployable scaffold (strict TS)| T2           | ✅ Done                                          |
+| FND-03         | P1: Deployable scaffold (Biome)    | T3           | ✅ Done                                          |
+| FND-04         | P1: TDD-ready test harness         | T5, T6, T7   | ✅ Done                                          |
+| FND-05         | P1: Deployable scaffold (UI)       | T9, T10, T11 | ⚠️ Partial — T9/T10 done; T11 (layout shell) pending |
+| FND-06         | P1: Welcome page                   | T15, T20     | ⏳ Pending — scaffold page exists; TDD rewrite pending T13 |
+| FND-07         | P1: Healthcheck endpoint           | T16          | ⏳ Pending                                       |
+| FND-08         | P1: SEO baseline (sitemap)         | T17          | ⏳ Pending                                       |
+| FND-09         | P1: SEO baseline (robots)          | T18          | ⏳ Pending                                       |
+| FND-10         | P1: SEO baseline (RSS)             | T19          | ⏳ Pending                                       |
+| FND-11         | P1: SEO baseline (root metadata)   | T13, T14, T21| ⏳ Pending                                       |
+| FND-12         | P1: Security baseline (headers)    | T22          | ⏳ Pending                                       |
+| FND-13         | P1: Security baseline (env schema) | T12          | ⚠️ Partial — `env.ts` committed; `env.test.ts` untracked |
+| FND-14         | P2: API documentation (Swagger)    | T23          | ⏳ Pending                                       |
+| FND-15         | P2: Vercel deployment              | T24, T25     | 🔁 T25 Deferred; T24 (.env.example + README) pending |
 
-**Coverage:** 15 total, 0 mapped to tasks (tasks.md pending), 0 unmapped.
+**Coverage:** 15 total, all mapped to tasks. 4 done/partial, 11 pending/deferred.
 
 ---
 

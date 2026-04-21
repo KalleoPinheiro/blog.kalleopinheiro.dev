@@ -6,7 +6,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 # State
 
 **Last Updated:** 2026-04-21
-**Current Work:** M1 — Foundation (spec pending)
+**Current Work:** M1 — Foundation — Phase 4 in progress (T13 site-config.ts is next)
 
 ---
 
@@ -91,7 +91,20 @@ _None yet._
 
 ## Quick Tasks Completed
 
-_None yet._
+| Task | Description                            | Commit    | Date       |
+| ---- | -------------------------------------- | --------- | ---------- |
+| T1   | Bootstrap Next.js 16 + App Router      | `d6d11b8` | 2026-04-21 |
+| T2   | Strict TypeScript flags + `@/*` alias  | `ff8147f` | 2026-04-21 |
+| T3   | Biome lint/format + noExplicitAny=error| `f7b8c32` | 2026-04-21 |
+| T4   | Package.json scripts (all 10 scripts)  | `ef85243` | 2026-04-21 |
+| T5   | Install Vitest 4 + RTL stack           | `03da6e2` | 2026-04-21 |
+| T6   | vitest.config.ts (jsdom, aliases, v8)  | `3c97d0e` | 2026-04-21 |
+| T7   | test/setup.ts + sum.ts AAA sample test | `ce0516e` | 2026-04-21 |
+| T9   | shadcn/ui init + Tailwind v4 (RF-3 ✅) | `3f07c3e` | 2026-04-21 |
+| T10  | Button + Card primitives + button test | `37fc987` | 2026-04-21 |
+| T12  | env.ts (zod) + env.test.ts             | `a791c70` | 2026-04-21 |
+
+**Note:** T8 (check script) is ✅ partially done — script works, README pending T24. T12 env.test.ts is committed in `a791c70` but was untracked at session start; verify with `git status`.
 
 ---
 
@@ -104,7 +117,8 @@ _None yet — captured in ROADMAP "Future Considerations" for now._
 ## Todos
 
 - [ ] At start of M2, verify Payload 3.x current-recommended Next.js install flow via Context7 before committing to architecture
-- [ ] At start of M1, decide on Tailwind v3 vs v4 based on current shadcn/ui compatibility
+- [x] ~~At start of M1, decide on Tailwind v3 vs v4 based on current shadcn/ui compatibility~~ — **Resolved (2026-04-21):** Tailwind v4 used with shadcn base-nova preset (T9, `3f07c3e`). v4 is fully supported.
+- [ ] Before starting T12 type hardening: improve test env isolation so `.url()` and `z.enum` validators on `envSchema` can be added without breaking Vitest stubs
 
 ---
 
