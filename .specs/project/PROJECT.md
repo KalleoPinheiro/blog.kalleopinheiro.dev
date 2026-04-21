@@ -57,6 +57,7 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 - **No `any` in TypeScript.** Use precise types; reach for `unknown` + narrowing or generics when uncertain. If `any` feels necessary, the design is wrong — stop and rethink.
 - **KISS.** Prefer the smallest working solution. No premature abstraction, speculative flexibility, or cleverness.
 - **DRY (with judgment).** Extract when duplication has *semantic* overlap, not just surface similarity. Three similar lines beats a premature abstraction.
+- **YAGNI.** Don't build what isn't needed yet. If a requirement isn't explicit and present, don't design, implement, or abstract for it — add it when the need is real.
 - **Security first.** No secrets in client bundles; validate inputs at boundaries; secure headers on by default.
 
 ## Scope
