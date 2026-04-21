@@ -14,7 +14,6 @@ export default function SwaggerUIWidget({ spec }: Props) {
       defaultModelsExpandDepth={0}
       docExpansion="list"
       filter={true}
-      showRequestHeaders={true}
       supportedSubmitMethods={["get", "post", "put", "delete", "patch"]}
     />
   );
