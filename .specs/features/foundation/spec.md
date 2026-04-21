@@ -187,7 +187,7 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 | FND-02         | P1: Deployable scaffold (strict TS)| T2           | ✅ Done                                          |
 | FND-03         | P1: Deployable scaffold (Biome)    | T3           | ✅ Done                                          |
 | FND-04         | P1: TDD-ready test harness         | T5, T6, T7   | ✅ Done                                          |
-| FND-05         | P1: Deployable scaffold (UI)       | T9, T10, T11 | ⚠️ Partial — T9/T10 done; T11 (layout shell) pending |
+| FND-05         | P1: Deployable scaffold (UI)       | T9, T10, T11 | ✅ Done                                              |
 | FND-06         | P1: Welcome page                   | T15, T20     | ⏳ Pending — scaffold page exists; TDD rewrite pending T13 |
 | FND-07         | P1: Healthcheck endpoint           | T16          | ⏳ Pending                                       |
 | FND-08         | P1: SEO baseline (sitemap)         | T17          | ⏳ Pending                                       |

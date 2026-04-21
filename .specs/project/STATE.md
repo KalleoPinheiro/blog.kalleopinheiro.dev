@@ -6,7 +6,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 # State
 
 **Last Updated:** 2026-04-21
-**Current Work:** M1 — Foundation — Phase 4 complete; T11 in progress (layout shell)
+**Current Work:** M1 — Foundation — T11 complete; Phase 5 in progress (T15 welcome page next)
 
 ---
 
@@ -105,6 +105,7 @@ _None yet._
 | T12  | env.ts (zod) + env.test.ts             | `a791c70` | 2026-04-21 |
 | T13  | site-config.ts + SiteConfig type       | `68d88f7` | 2026-04-21 |
 | T14  | metadata.ts — buildRootMetadata/Page   | `085415a` | 2026-04-21 |
+| T11  | SiteHeader + SiteFooter Server Components | `6737af6` | 2026-04-21 |
 
 **Note:** T8 (check script) is ✅ partially done — script works, README pending T24. T12 env.test.ts is committed in `a791c70` but was untracked at session start; verify with `git status`.
 
