@@ -20,11 +20,7 @@ describe("env", () => {
 
   it("applies defaults for optional variables", async () => {
     // Arrange
-    vi.stubEnv("NODE_ENV", "development");
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "http://localhost:3000");
-    vi.unstubAllEnvs();
-    process.env.NODE_ENV = "development";
-    process.env.NEXT_PUBLIC_SITE_URL = "http://localhost:3000";
     delete process.env.APP_VERSION;
     delete process.env.ENABLE_API_DOCS;
 
@@ -41,7 +37,6 @@ describe("env", () => {
     // Arrange
     vi.unstubAllEnvs();
     delete process.env.NEXT_PUBLIC_SITE_URL;
-    process.env.NODE_ENV = "production";
 
     // Act & Assert
     const { createEnv } = await import("./env");
