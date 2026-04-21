@@ -6,7 +6,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 # State
 
 **Last Updated:** 2026-04-21
-**Current Work:** M1 — Foundation — Phase 4 in progress (T14 metadata.ts is next)
+**Current Work:** M1 — Foundation — Phase 4 complete; T11 in progress (layout shell)
 
 ---
 
@@ -104,6 +104,7 @@ _None yet._
 | T10  | Button + Card primitives + button test | `37fc987` | 2026-04-21 |
 | T12  | env.ts (zod) + env.test.ts             | `a791c70` | 2026-04-21 |
 | T13  | site-config.ts + SiteConfig type       | `68d88f7` | 2026-04-21 |
+| T14  | metadata.ts — buildRootMetadata/Page   | `085415a` | 2026-04-21 |
 
 **Note:** T8 (check script) is ✅ partially done — script works, README pending T24. T12 env.test.ts is committed in `a791c70` but was untracked at session start; verify with `git status`.
 

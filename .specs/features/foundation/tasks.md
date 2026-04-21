@@ -256,7 +256,7 @@ T25 (Vercel deploy) — DEFERRED, see STATE.md AD-009
 **Depends on**: T10, T13
 **Reuses**: shadcn primitives, `siteConfig`
 **Requirement**: FND-05, FND-06
-**Status**: ⏳ PENDING — T10 ✅ T13 ✅ fully unblocked; follows T14
+**Status**: 🔄 IN PROGRESS
 
 **Done when**:
 - [ ] Both files exist with tests verifying the site name appears and roles are correct
@@ -307,11 +307,11 @@ T25 (Vercel deploy) — DEFERRED, see STATE.md AD-009
 **Depends on**: T13
 **Reuses**: `siteConfig`, Next.js `Metadata` type
 **Requirement**: FND-11
-**Status**: 🔄 IN PROGRESS
+**Status**: ✅ DONE — commit `085415a`
 
 **Done when**:
-- [ ] Tests cover: root defaults, per-page override, canonical URL building
-- [ ] Helper returns `Metadata` (no `any`, no `as unknown as`)
+- [x] Tests cover: root defaults, per-page override, canonical URL building
+- [x] Helper returns `Metadata` (no `any`, no `as unknown as`)
 
 ---
 
