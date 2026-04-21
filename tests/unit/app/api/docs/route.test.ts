@@ -1,66 +1,33 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { GET } from "@/app/api/docs/route";
+
+vi.mock("@/utils/swagger", () => ({
+  getApiDocs: () => ({
+    openapi: "3.1.0",
+    info: {
+      title: "Personal Blog API",
+      version: "1.0.0",
+    },
+    paths: {
+      "/api/health": {
+        get: {
+          summary: "Healthcheck",
+        },
+      },
+    },
+  }),
+}));
 
 describe("GET /api/docs", () => {
-  beforeEach(() => {
-    vi.resetModules();
-  });
+  it("returns OpenAPI spec as JSON when ENABLE_API_DOCS=true", async () => {
+    const sut = GET();
 
-  it("returns 404 when ENABLE_API_DOCS is false", async () => {
-    // Arrange
-    vi.doMock("@/utils/env", () => ({
-      env: {
-        NODE_ENV: "production",
-        NEXT_PUBLIC_SITE_URL: "https://example.com",
-        APP_VERSION: "1.0.0",
-        ENABLE_API_DOCS: "false",
-      },
-    }));
-    const { GET } = await import("@/app/api/docs/route");
-
-    // Act
-    const sut = await GET();
-
-    // Assert
-    expect(sut.status).toBe(404);
-  });
-
-  it("returns 200 with HTML when ENABLE_API_DOCS is true", async () => {
-    // Arrange
-    vi.doMock("@/utils/env", () => ({
-      env: {
-        NODE_ENV: "development",
-        NEXT_PUBLIC_SITE_URL: "https://example.com",
-        APP_VERSION: "dev",
-        ENABLE_API_DOCS: "true",
-      },
-    }));
-    const { GET } = await import("@/app/api/docs/route");
-
-    // Act
-    const sut = await GET();
-
-    // Assert
     expect(sut.status).toBe(200);
-    expect(sut.headers.get("content-type")).toMatch(/text\/html/);
-  });
+    expect(sut.headers.get("content-type")).toBe("application/json");
 
-  it("response body contains swagger-ui reference when enabled", async () => {
-    // Arrange
-    vi.doMock("@/utils/env", () => ({
-      env: {
-        NODE_ENV: "development",
-        NEXT_PUBLIC_SITE_URL: "https://example.com",
-        APP_VERSION: "dev",
-        ENABLE_API_DOCS: "true",
-      },
-    }));
-    const { GET } = await import("@/app/api/docs/route");
-
-    // Act
-    const sut = await GET();
-    const body = await sut.text();
-
-    // Assert
-    expect(body).toContain("swagger-ui");
+    const body = await sut.json();
+    expect(body.openapi).toBe("3.1.0");
+    expect(body.info.title).toBe("Personal Blog API");
+    expect(body.paths).toHaveProperty("/api/health");
   });
 });

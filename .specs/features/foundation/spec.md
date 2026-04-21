@@ -143,13 +143,16 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 
 **Why P2**: Valuable but non-blocking — M1 only ships one endpoint (`/api/health`). The setup is worth locking in now while API surface is small.
 
+**Implementation**: Swagger UI rendered via `swagger-ui-react` (bundled, no CDN), OpenAPI spec auto-generated via `swagger-jsdoc` reading JSDoc annotations from route files. UI at `/api-docs` (public Next.js page), JSON spec at `/api/docs` (API route, gated by `ENABLE_API_DOCS` env var). Content Security Policy does not need modification as all resources are bundled.
+
 **Acceptance Criteria**:
 
-1. WHEN I visit `/api/docs` (dev environment, or gated in production) THEN I SHALL see rendered Swagger UI listing all API routes.
-2. WHEN a new API route is added with JSDoc/OpenAPI annotations THEN it SHALL appear automatically in the Swagger UI.
-3. WHEN the OpenAPI JSON is fetched THEN it SHALL validate against the OpenAPI 3.1 spec.
+1. WHEN I visit `/api-docs` (dev environment, `ENABLE_API_DOCS=true`, or gated in production) THEN I SHALL see rendered Swagger UI listing all API routes.
+2. WHEN a new API route is added with JSDoc `@swagger` annotations THEN it SHALL appear automatically in the Swagger UI on next build.
+3. WHEN the OpenAPI JSON is fetched from `/api/docs` THEN it SHALL validate against the OpenAPI 3.1 spec.
+4. WHEN `ENABLE_API_DOCS` is not set to `"true"` THEN `/api-docs` SHALL return 404 and `/api/docs` SHALL return 404.
 
-**Independent Test**: Load `/api/docs` → healthcheck is listed with accurate request/response schema.
+**Independent Test**: Load `/api-docs` with `ENABLE_API_DOCS=true` → healthcheck, rss, and docs routes are listed with accurate request/response schema. Fetch `/api/docs` → JSON spec is valid OpenAPI 3.1.
 
 ---
 

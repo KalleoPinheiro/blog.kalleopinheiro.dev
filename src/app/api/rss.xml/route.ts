@@ -1,5 +1,23 @@
 import { siteConfig } from "@/utils/site-config";
 
+/**
+ * @swagger
+ * /api/rss.xml:
+ *   get:
+ *     summary: RSS feed
+ *     description: Returns the RSS feed in XML format
+ *     operationId: getRssFeed
+ *     tags:
+ *       - Content
+ *     responses:
+ *       '200':
+ *         description: RSS feed in valid XML format
+ *         content:
+ *           application/rss+xml:
+ *             schema:
+ *               type: string
+ *               format: xml
+ */
 export function GET(): Response {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
