@@ -193,7 +193,7 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 | FND-08         | P1: SEO baseline (sitemap)         | T17          | ⏳ Pending                                       |
 | FND-09         | P1: SEO baseline (robots)          | T18          | ⏳ Pending                                       |
 | FND-10         | P1: SEO baseline (RSS)             | T19          | ⏳ Pending                                       |
-| FND-11         | P1: SEO baseline (root metadata)   | T13, T14, T21| ⏳ Pending                                       |
+| FND-11         | P1: SEO baseline (root metadata)   | T13, T14, T21| ⚠️ Partial — T13 done; T14 in progress; T21 pending |
 | FND-12         | P1: Security baseline (headers)    | T22          | ⏳ Pending                                       |
 | FND-13         | P1: Security baseline (env schema) | T12          | ⚠️ Partial — `env.ts` committed; `env.test.ts` untracked |
 | FND-14         | P2: API documentation (Swagger)    | T23          | ⏳ Pending                                       |

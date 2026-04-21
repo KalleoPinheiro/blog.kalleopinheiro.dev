@@ -256,7 +256,7 @@ T25 (Vercel deploy) — DEFERRED, see STATE.md AD-009
 **Depends on**: T10, T13
 **Reuses**: shadcn primitives, `siteConfig`
 **Requirement**: FND-05, FND-06
-**Status**: ⏳ PENDING — blocked on T13 (site-config.ts)
+**Status**: ⏳ PENDING — T10 ✅ T13 ✅ fully unblocked; follows T14
 
 **Done when**:
 - [ ] Both files exist with tests verifying the site name appears and roles are correct
@@ -292,11 +292,11 @@ T25 (Vercel deploy) — DEFERRED, see STATE.md AD-009
 **Depends on**: T12
 **Reuses**: `env`
 **Requirement**: FND-11, FND-08, FND-09, FND-10
-**Status**: ⏳ PENDING
+**Status**: ✅ DONE — commit `68d88f7`
 
 **Done when**:
-- [ ] Test asserts `siteConfig.url` derives from `env.NEXT_PUBLIC_SITE_URL`
-- [ ] Type `SiteConfig` exported
+- [x] Test asserts `siteConfig.url` derives from `env.NEXT_PUBLIC_SITE_URL`
+- [x] Type `SiteConfig` exported
 
 ---
 
@@ -307,7 +307,7 @@ T25 (Vercel deploy) — DEFERRED, see STATE.md AD-009
 **Depends on**: T13
 **Reuses**: `siteConfig`, Next.js `Metadata` type
 **Requirement**: FND-11
-**Status**: ⏳ PENDING
+**Status**: 🔄 IN PROGRESS
 
 **Done when**:
 - [ ] Tests cover: root defaults, per-page override, canonical URL building
