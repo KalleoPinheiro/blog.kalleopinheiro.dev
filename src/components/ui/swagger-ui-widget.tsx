@@ -8,5 +8,14 @@ type Props = {
 };
 
 export default function SwaggerUIWidget({ spec }: Props) {
-  return <SwaggerUI spec={spec} />;
+  return (
+    <SwaggerUI
+      spec={spec}
+      defaultModelsExpandDepth={0}
+      docExpansion="list"
+      filter={true}
+      showRequestHeaders={true}
+      supportedSubmitMethods={["get", "post", "put", "delete", "patch"]}
+    />
+  );
 }

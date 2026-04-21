@@ -4,7 +4,7 @@ import { env } from "@/utils/env";
 export function getApiDocs() {
   return swaggerJsdoc({
     definition: {
-      openapi: "3.1.0",
+      openapi: "3.0.0",
       info: {
         title: "Personal Blog API",
         version: env.APP_VERSION,

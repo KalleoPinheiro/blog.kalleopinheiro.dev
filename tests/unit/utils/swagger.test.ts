@@ -6,7 +6,7 @@ describe("swagger", () => {
     it("returns a valid OpenAPI spec object", () => {
       const sut = getApiDocs() as Record<string, unknown>;
 
-      expect(sut).toHaveProperty("openapi", "3.1.0");
+      expect(sut).toHaveProperty("openapi", "3.0.0");
       expect(sut).toHaveProperty("info");
       expect(sut).toHaveProperty("paths");
     });

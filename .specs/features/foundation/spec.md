@@ -149,7 +149,7 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 
 1. WHEN I visit `/api-docs` (dev environment, `ENABLE_API_DOCS=true`, or gated in production) THEN I SHALL see rendered Swagger UI listing all API routes.
 2. WHEN a new API route is added with JSDoc `@swagger` annotations THEN it SHALL appear automatically in the Swagger UI on next build.
-3. WHEN the OpenAPI JSON is fetched from `/api/docs` THEN it SHALL validate against the OpenAPI 3.1 spec.
+3. WHEN the OpenAPI JSON is fetched from `/api/docs` THEN it SHALL validate against the OpenAPI 3.0.0 spec.
 4. WHEN `ENABLE_API_DOCS` is not set to `"true"` THEN `/api-docs` SHALL return 404 and `/api/docs` SHALL return 404.
 
 **Independent Test**: Load `/api-docs` with `ENABLE_API_DOCS=true` → healthcheck, rss, and docs routes are listed with accurate request/response schema. Fetch `/api/docs` → JSON spec is valid OpenAPI 3.1.
