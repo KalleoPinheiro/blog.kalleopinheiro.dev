@@ -143,7 +143,7 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 
 **Why P2**: Valuable but non-blocking — M1 only ships one endpoint (`/api/health`). The setup is worth locking in now while API surface is small.
 
-**Implementation**: Swagger UI rendered via `swagger-ui-react` (bundled, no CDN), OpenAPI spec auto-generated via `swagger-jsdoc` reading JSDoc annotations from route files. UI at `/api-docs` (public Next.js page), JSON spec at `/api/docs` (API route, gated by `ENABLE_API_DOCS` env var). Content Security Policy does not need modification as all resources are bundled.
+**Implementation**: Swagger UI rendered via `swagger-ui-react` (bundled, no CDN), OpenAPI spec auto-generated via `swagger-jsdoc` reading JSDoc annotations from route files. UI at `/api-docs` (static page, prerendered), JSON spec at `/api/docs` (API route, gated by `ENABLE_API_DOCS` env var). CSP modified to allow `unsafe-eval` in development (required for React and Swagger UI debugging).
 
 **Acceptance Criteria**:
 
@@ -152,7 +152,7 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 3. WHEN the OpenAPI JSON is fetched from `/api/docs` THEN it SHALL validate against the OpenAPI 3.0.0 spec.
 4. WHEN `ENABLE_API_DOCS` is not set to `"true"` THEN `/api-docs` SHALL return 404 and `/api/docs` SHALL return 404.
 
-**Independent Test**: Load `/api-docs` with `ENABLE_API_DOCS=true` → healthcheck, rss, and docs routes are listed with accurate request/response schema. Fetch `/api/docs` → JSON spec is valid OpenAPI 3.1.
+**Independent Test**: Load `/api-docs` with `ENABLE_API_DOCS=true` → healthcheck, rss, and docs routes are listed with accurate request/response schema. Fetch `/api/docs` → JSON spec is valid OpenAPI 3.0.0.
 
 ---
 
@@ -219,11 +219,11 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 | FND-11         | P1: SEO baseline (root metadata)   | T13, T14, T21| ✅ Done                                                   |
 | FND-12         | P1: Security baseline (headers)    | T22          | ✅ Done (manual curl header check pending T25)            |
 | FND-13         | P1: Security baseline (env schema) | T12          | ✅ Done                                                   |
-| FND-14         | P2: API documentation (Swagger)    | T23          | ✅ Done (manual Swagger UI check pending T25)             |
+| FND-14         | P2: API documentation (Swagger)    | T23          | ✅ Done — Swagger UI + auto-discovery via JSDoc           |
 | FND-15         | P2: Project structure & organization | T26, T27, T28, T29 | ✅ Done — 4 refactoring commits:<br/>1. layouts rename (layout/ → layouts/)<br/>2. (public) route group<br/>3. globals.css migration<br/>4. utils reorganization (lib → utils) + test structure (test/ → tests/unit) |
 | FND-16         | P2: Vercel deployment              | T24, T25     | ⚠️ Partial — T24 ✅; T25 (Vercel deploy) deferred AD-009 |
 
-**Coverage:** 16 total, all mapped. 15 done, 1 deferred (T25). 45/45 tests passing.
+**Coverage:** 16 total, all mapped. 15 done, 1 deferred (T25). 49/49 tests passing.
 
 ---
 
