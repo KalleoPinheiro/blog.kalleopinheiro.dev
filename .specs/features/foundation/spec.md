@@ -164,10 +164,12 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 1. WHEN the app starts THEN all routes SHALL resolve correctly with the new structure (public routes in `(public)` group, API routes under `api/`).
 2. WHEN CSS imports are resolved THEN global styles SHALL load from `src/styles/globals.css` via absolute alias `@/styles/`.
 3. WHEN a component is imported THEN layout/header components SHALL be located in `src/components/layouts/` (plural convention).
-4. WHEN the folder structure is inspected THEN placeholder directories SHALL exist for future domains: `src/features/`, `src/hooks/`, `src/services/`, `src/types/`, `src/components/common/`, `src/components/providers/`.
-5. WHEN build runs THEN TypeScript SHALL report zero errors after path alias resolution.
+4. WHEN utilities are imported THEN configuration and helper functions SHALL be in `src/utils/` (env.ts, metadata.ts, site-config.ts, robots.ts, sitemap.ts, utils.ts).
+5. WHEN the folder structure is inspected THEN placeholder directories SHALL exist for future domains: `src/features/`, `src/hooks/`, `src/services/`, `src/types/`, `src/components/common/`, `src/components/providers/`.
+6. WHEN tests are run THEN unit tests SHALL be organized in `tests/unit/` mirroring `src/` structure, and e2e tests SHALL be ready in `tests/e2e/` (placeholder).
+7. WHEN build runs THEN TypeScript SHALL report zero errors after path alias resolution.
 
-**Independent Test**: Clone repo → `pnpm install && pnpm build` succeeds; navigate to `/` and inspect source—metadata and styles load correctly.
+**Independent Test**: Clone repo → `pnpm install && pnpm test && pnpm build` succeeds; navigate to `/` and inspect source—metadata and styles load correctly.
 
 ---
 
@@ -215,16 +217,16 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 | FND-12         | P1: Security baseline (headers)    | T22          | ✅ Done (manual curl header check pending T25)            |
 | FND-13         | P1: Security baseline (env schema) | T12          | ✅ Done                                                   |
 | FND-14         | P2: API documentation (Swagger)    | T23          | ✅ Done (manual Swagger UI check pending T25)             |
-| FND-15         | P2: Project structure & organization | T26, T27, T28 | ✅ Done — 3 refactoring commits (layouts rename, (public) route group, globals.css migration) |
+| FND-15         | P2: Project structure & organization | T26, T27, T28, T29 | ✅ Done — 4 refactoring commits:<br/>1. layouts rename (layout/ → layouts/)<br/>2. (public) route group<br/>3. globals.css migration<br/>4. utils reorganization (lib → utils) + test structure (test/ → tests/unit) |
 | FND-16         | P2: Vercel deployment              | T24, T25     | ⚠️ Partial — T24 ✅; T25 (Vercel deploy) deferred AD-009 |
 
-**Coverage:** 16 total, all mapped. 15 done, 1 deferred (T25). 48/48 tests passing.
+**Coverage:** 16 total, all mapped. 15 done, 1 deferred (T25). 45/45 tests passing.
 
 ---
 
 ## Success Criteria
 
-- [ ] `pnpm install && pnpm typecheck && pnpm lint && pnpm test && pnpm build` passes on a clean clone.
+- [x] `pnpm install && pnpm typecheck && pnpm lint && pnpm test && pnpm build` passes on a clean clone.
 - [ ] Welcome page scores Lighthouse SEO = 100, Performance ≥ 95, Accessibility ≥ 95, Best Practices ≥ 95 (mobile).
 - [ ] `/api/health` returns valid JSON with `status: "ok"` on Vercel preview.
 - [ ] `/sitemap.xml`, `/robots.txt`, `/rss.xml` all return valid documents on Vercel preview.

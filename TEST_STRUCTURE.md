@@ -2,7 +2,7 @@
 
 ## Overview
 
-The project uses a **mirrored test structure** where tests are organized in a separate `/test` directory that mirrors the structure of `/src`. This approach provides:
+The project uses a **mirrored test structure** where tests are organized in a separate `/tests` directory that mirrors the structure of `/src`. This approach provides:
 
 - **Clear separation of concerns**: Source code and tests are physically separated
 - **Scalability**: Easy to organize and find tests as the project grows
@@ -23,8 +23,6 @@ project-root/
 │  │  │  ├─ docs/route.ts
 │  │  │  └─ rss.xml/route.ts
 │  │  ├─ layout.tsx
-│  │  ├─ robots.ts
-│  │  ├─ sitemap.ts
 │  │  └─ not-found.tsx
 │  │
 │  ├─ components/
@@ -37,11 +35,13 @@ project-root/
 │  │  ├─ common/              # [Placeholder]
 │  │  └─ providers/           # [Placeholder]
 │  │
-│  ├─ lib/
+│  ├─ utils/                  # Utilities, config, and helpers
 │  │  ├─ env.ts               # Environment variables (typed with Zod)
 │  │  ├─ metadata.ts          # Next.js metadata builders
 │  │  ├─ site-config.ts       # Site configuration
-│  │  └─ utils.ts             # Utility functions
+│  │  ├─ robots.ts            # Robots.txt generator
+│  │  ├─ sitemap.ts           # Sitemap generator
+│  │  └─ utils.ts             # General utility functions
 │  │
 │  ├─ features/               # [Placeholder for domain-driven features]
 │  ├─ hooks/                  # [Placeholder for custom hooks]
@@ -51,8 +51,8 @@ project-root/
 │  │  └─ globals.css
 │  └─ ...
 │
-├─ test/                        # Test code (mirrored structure)
-│  ├─ unit-tests/             # Unit tests
+├─ tests/                       # Test code (mirrored structure)
+│  ├─ unit/                   # Unit tests
 │  │  ├─ app/
 │  │  │  ├─ (public)/
 │  │  │  │  └─ page.test.tsx
@@ -61,8 +61,6 @@ project-root/
 │  │  │  │  ├─ docs/route.test.ts
 │  │  │  │  └─ rss.xml/route.test.ts
 │  │  │  ├─ layout.test.tsx
-│  │  │  ├─ robots.test.ts
-│  │  │  ├─ sitemap.test.ts
 │  │  │  └─ not-found.test.tsx
 │  │  │
 │  │  ├─ components/
@@ -90,7 +88,7 @@ project-root/
 
 ## Test Categories
 
-### Unit Tests (`test/unit-tests/`)
+### Unit Tests (`tests/unit/`)
 
 **Purpose**: Test individual units of code in isolation (components, functions, utilities).
 
@@ -106,7 +104,7 @@ project-root/
 
 **Example**:
 ```typescript
-// test/unit-tests/lib/env.test.ts
+// tests/unit/lib/env.test.ts
 import { describe, expect, it, vi } from "vitest";
 
 describe("env module", () => {
@@ -125,7 +123,7 @@ describe("env module", () => {
 });
 ```
 
-### E2E Tests (`test/e2e/`)
+### E2E Tests (`tests/e2e/`)
 
 **Purpose**: Test complete user workflows (cross-browser, cross-platform integration).
 
@@ -179,7 +177,7 @@ Generates:
 
 ### Run Specific Test File
 ```bash
-pnpm test test/unit-tests/lib/env.test.ts
+pnpm test tests/unit/lib/env.test.ts
 ```
 
 ---
@@ -273,8 +271,8 @@ const props: ButtonProps = { title: "test" };
 test: {
   environment: "jsdom",                          // Browser-like env for React tests
   globals: true,                                 // No need to import describe/it/expect
-  setupFiles: ["./test/setup.ts"],              // Global test setup
-  include: ["test/unit-tests/**/*.test.{ts,tsx}"], // Where tests live
+  setupFiles: ["./tests/setup.ts"],              // Global test setup
+  include: ["tests/unit/**/*.test.{ts,tsx}"], // Where tests live
   clearMocks: true,                              // Auto-reset mocks between tests
   restoreMocks: true,                            // Auto-restore mocks between tests
   coverage: {
@@ -301,7 +299,7 @@ import "@testing-library/jest-dom";
 ### Testing API Routes
 
 ```typescript
-// test/unit-tests/app/api/health/route.test.ts
+// tests/unit/app/api/health/route.test.ts
 import { describe, expect, it } from "vitest";
 import { GET } from "@/app/api/health/route";
 
@@ -320,7 +318,7 @@ describe("GET /api/health", () => {
 ### Testing React Components
 
 ```typescript
-// test/unit-tests/components/ui/button.test.tsx
+// tests/unit/components/ui/button.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import Button from "@/components/ui/button";
 
@@ -343,7 +341,7 @@ describe("Button", () => {
 ### Testing Utility Functions
 
 ```typescript
-// test/unit-tests/lib/utils.test.ts
+// tests/unit/lib/utils.test.ts
 import { describe, expect, it } from "vitest";
 import { formatDate } from "@/utils/utils";
 
@@ -367,7 +365,7 @@ describe("formatDate", () => {
 
 When implementing E2E tests:
 
-1. Create `test/e2e/` directory
+1. Create `tests/e2e/` directory
 2. Add Playwright/Cypress configuration
 3. Write integration tests for user workflows
 4. Run in CI/CD pipeline
