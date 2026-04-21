@@ -1,0 +1,34 @@
+# Deps
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Env
+.env
+.env.*.local
+.env.local
+
+# Build
+dist/
+build/
+
+# Testing
+coverage/
+*.lcov
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Vercel
+.vercel/
