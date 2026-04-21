@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/env", () => ({
+vi.mock("@/utils/env", () => ({
   env: {
     NODE_ENV: "test",
     NEXT_PUBLIC_SITE_URL: "https://test.example.com",
@@ -9,7 +9,7 @@ vi.mock("@/lib/env", () => ({
   },
 }));
 
-import { GET } from "./route";
+import { GET } from "@/app/api/health/route";
 
 describe("GET /api/health", () => {
   it("returns status 200", async () => {

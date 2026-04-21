@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig } from "@/utils/site-config";
 
 export default function Page() {
   return (

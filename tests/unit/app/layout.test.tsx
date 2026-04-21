@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/site-config", () => ({
+vi.mock("@/utils/site-config", () => ({
   siteConfig: {
     name: "Test Blog",
     url: "https://test.example.com",
@@ -24,7 +24,7 @@ vi.mock("next/font/google", () => ({
   }),
 }));
 
-import RootLayout from "./layout";
+import RootLayout from "@/app/layout";
 
 describe("RootLayout", () => {
   it("renders a banner landmark from SiteHeader", () => {

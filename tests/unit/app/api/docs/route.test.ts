@@ -7,7 +7,7 @@ describe("GET /api/docs", () => {
 
   it("returns 404 when ENABLE_API_DOCS is false", async () => {
     // Arrange
-    vi.doMock("@/lib/env", () => ({
+    vi.doMock("@/utils/env", () => ({
       env: {
         NODE_ENV: "production",
         NEXT_PUBLIC_SITE_URL: "https://example.com",
@@ -15,7 +15,7 @@ describe("GET /api/docs", () => {
         ENABLE_API_DOCS: "false",
       },
     }));
-    const { GET } = await import("./route");
+    const { GET } = await import("@/app/api/docs/route");
 
     // Act
     const sut = await GET();
@@ -26,7 +26,7 @@ describe("GET /api/docs", () => {
 
   it("returns 200 with HTML when ENABLE_API_DOCS is true", async () => {
     // Arrange
-    vi.doMock("@/lib/env", () => ({
+    vi.doMock("@/utils/env", () => ({
       env: {
         NODE_ENV: "development",
         NEXT_PUBLIC_SITE_URL: "https://example.com",
@@ -34,7 +34,7 @@ describe("GET /api/docs", () => {
         ENABLE_API_DOCS: "true",
       },
     }));
-    const { GET } = await import("./route");
+    const { GET } = await import("@/app/api/docs/route");
 
     // Act
     const sut = await GET();
@@ -46,7 +46,7 @@ describe("GET /api/docs", () => {
 
   it("response body contains swagger-ui reference when enabled", async () => {
     // Arrange
-    vi.doMock("@/lib/env", () => ({
+    vi.doMock("@/utils/env", () => ({
       env: {
         NODE_ENV: "development",
         NEXT_PUBLIC_SITE_URL: "https://example.com",
@@ -54,7 +54,7 @@ describe("GET /api/docs", () => {
         ENABLE_API_DOCS: "true",
       },
     }));
-    const { GET } = await import("./route");
+    const { GET } = await import("@/app/api/docs/route");
 
     // Act
     const sut = await GET();

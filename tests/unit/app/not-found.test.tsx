@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import NotFound from "./not-found";
+import NotFound from "@/app/not-found";
 
 describe("NotFound page", () => {
   it("renders a main landmark", () => {

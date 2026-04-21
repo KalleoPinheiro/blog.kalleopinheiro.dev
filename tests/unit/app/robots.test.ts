@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/site-config", () => ({
+vi.mock("@/utils/site-config", () => ({
   siteConfig: {
     name: "Test Blog",
     url: "https://test.example.com",
@@ -15,7 +15,7 @@ vi.mock("@/lib/site-config", () => ({
   },
 }));
 
-import robots from "./robots";
+import robots from "@/utils/robots";
 
 describe("robots", () => {
   it("allows all user agents", () => {

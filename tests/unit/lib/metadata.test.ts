@@ -1,6 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("./site-config", () => ({
+vi.mock("@/utils/env", () => ({
+  env: {
+    NODE_ENV: "test",
+    NEXT_PUBLIC_SITE_URL: "https://test.example.com",
+    APP_VERSION: "1.0.0",
+    ENABLE_API_DOCS: "false",
+  },
+}));
+
+vi.mock("@/utils/site-config", () => ({
   siteConfig: {
     name: "Test Blog",
     url: "https://test.example.com",
@@ -15,7 +24,7 @@ vi.mock("./site-config", () => ({
   },
 }));
 
-import { buildPageMetadata, buildRootMetadata } from "./metadata";
+import { buildPageMetadata, buildRootMetadata } from "@/utils/metadata";
 
 describe("buildRootMetadata", () => {
   it("includes a title template with the site name as default", () => {

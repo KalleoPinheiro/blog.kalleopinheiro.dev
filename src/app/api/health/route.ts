@@ -1,5 +1,5 @@
+import { env } from "@/utils/env";
 import { NextResponse } from "next/server";
-import { env } from "@/lib/env";
 
 interface HealthPayload {
   status: "ok";

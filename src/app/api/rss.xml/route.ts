@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig } from "@/utils/site-config";
 
 export function GET(): Response {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

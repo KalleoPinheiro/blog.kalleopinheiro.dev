@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/site-config", () => ({
+vi.mock("@/utils/site-config", () => ({
   siteConfig: {
     name: "Test Blog",
     url: "https://test.example.com",
@@ -16,7 +16,7 @@ vi.mock("@/lib/site-config", () => ({
   },
 }));
 
-import { SiteFooter } from "./site-footer";
+import { SiteFooter } from "@/components/layouts/site-footer";
 
 describe("SiteFooter", () => {
   it("renders the site name in the copyright notice", () => {

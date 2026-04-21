@@ -153,6 +153,24 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 
 ---
 
+### P2: Project structure and folder organization
+
+**User Story**: As a maintainer, I want a scalable folder structure aligned with Next.js 13+ App Router conventions and domain-driven design, so that future features can be added with minimal cognitive overhead.
+
+**Why P2**: Foundation must anticipate growth (route groups, domain features, custom hooks, providers) without forcing premature refactoring later.
+
+**Acceptance Criteria**:
+
+1. WHEN the app starts THEN all routes SHALL resolve correctly with the new structure (public routes in `(public)` group, API routes under `api/`).
+2. WHEN CSS imports are resolved THEN global styles SHALL load from `src/styles/globals.css` via absolute alias `@/styles/`.
+3. WHEN a component is imported THEN layout/header components SHALL be located in `src/components/layouts/` (plural convention).
+4. WHEN the folder structure is inspected THEN placeholder directories SHALL exist for future domains: `src/features/`, `src/hooks/`, `src/services/`, `src/types/`, `src/components/common/`, `src/components/providers/`.
+5. WHEN build runs THEN TypeScript SHALL report zero errors after path alias resolution.
+
+**Independent Test**: Clone repo → `pnpm install && pnpm build` succeeds; navigate to `/` and inspect source—metadata and styles load correctly.
+
+---
+
 ### P2: Vercel deployment
 
 **User Story**: As the maintainer, I want the app deployed to Vercel with preview-per-branch, so that every change is verifiable in a production-like environment.
@@ -197,9 +215,10 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 | FND-12         | P1: Security baseline (headers)    | T22          | ✅ Done (manual curl header check pending T25)            |
 | FND-13         | P1: Security baseline (env schema) | T12          | ✅ Done                                                   |
 | FND-14         | P2: API documentation (Swagger)    | T23          | ✅ Done (manual Swagger UI check pending T25)             |
-| FND-15         | P2: Vercel deployment              | T24, T25     | ⚠️ Partial — T24 ✅; T25 (Vercel deploy) deferred AD-009 |
+| FND-15         | P2: Project structure & organization | T26, T27, T28 | ✅ Done — 3 refactoring commits (layouts rename, (public) route group, globals.css migration) |
+| FND-16         | P2: Vercel deployment              | T24, T25     | ⚠️ Partial — T24 ✅; T25 (Vercel deploy) deferred AD-009 |
 
-**Coverage:** 15 total, all mapped. 14 done, 1 deferred (T25). 48/48 tests passing.
+**Coverage:** 16 total, all mapped. 15 done, 1 deferred (T25). 48/48 tests passing.
 
 ---
 

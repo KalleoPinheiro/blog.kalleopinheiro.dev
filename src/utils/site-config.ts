@@ -1,4 +1,4 @@
-import { env } from "@/lib/env";
+import { env } from "@/utils/env";
 
 export interface SiteConfig {
   name: string;

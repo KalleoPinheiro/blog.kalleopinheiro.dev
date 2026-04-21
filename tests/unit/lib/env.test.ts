@@ -9,7 +9,7 @@ describe("env", () => {
     vi.stubEnv("ENABLE_API_DOCS", "false");
 
     // Act
-    const { env: sut } = await import("./env");
+    const { env: sut } = await import("@/utils/env");
 
     // Assert
     expect(sut.NODE_ENV).toBe("production");
@@ -25,7 +25,7 @@ describe("env", () => {
     delete process.env.ENABLE_API_DOCS;
 
     // Act
-    const { createEnv } = await import("./env");
+    const { createEnv } = await import("@/utils/env");
     const sut = createEnv();
 
     // Assert
@@ -39,7 +39,7 @@ describe("env", () => {
     delete process.env.NEXT_PUBLIC_SITE_URL;
 
     // Act & Assert
-    const { createEnv } = await import("./env");
+    const { createEnv } = await import("@/utils/env");
     expect(() => createEnv()).toThrow();
   });
 });

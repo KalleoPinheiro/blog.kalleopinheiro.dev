@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/site-config", () => ({
+vi.mock("@/utils/site-config", () => ({
   siteConfig: {
     name: "Test Blog",
     url: "https://test.example.com",
@@ -16,7 +16,7 @@ vi.mock("@/lib/site-config", () => ({
   },
 }));
 
-import { SiteHeader } from "./site-header";
+import { SiteHeader } from "@/components/layouts/site-header";
 
 describe("SiteHeader", () => {
   it("renders the site name", () => {
