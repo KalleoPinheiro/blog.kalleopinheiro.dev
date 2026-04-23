@@ -229,7 +229,8 @@ We need a deployable Next.js app with disciplined tooling, test infrastructure, 
 
 ## Lighthouse Audit Results (2026-04-23)
 
-Production audit at https://blog.kalleopinheiro.dev/ (mobile):
+Production audit at production site (mobile):
+
 - **SEO: 100** ✅
 - **Performance: 100** ✅ (exceeds ≥95 target)
 - **Accessibility: 100** ✅ (exceeds ≥95 target)
@@ -243,7 +244,7 @@ All primary goals achieved. Best Practices shortfall is minor and does not block
 
 - [x] `pnpm install && pnpm typecheck && pnpm lint && pnpm test && pnpm build` passes on a clean clone.
 - [x] Welcome page scores Lighthouse SEO = 100, Performance ≥ 95, Accessibility ≥ 95 (mobile). [Best Practices: 92 — see note below]
-- [x] `/api/health` returns valid JSON with `status: "ok"` on Vercel production (https://blog.kalleopinheiro.dev/api/health).
+- [x] `/api/health` returns valid JSON with `status: "ok"` on Vercel production ([api/health endpoint](https://blog.kalleopinheiro.dev/api/health)).
 - [x] `/sitemap.xml`, `/robots.txt`, `/rss.xml` route handlers exist and tests pass (manual XML/RSS validation pending).
 - [x] Every FND-* requirement has at least one Vitest test authored before its implementation.
 - [x] `git grep -n ": any"` returns zero matches in `src/`.
