@@ -17,6 +17,9 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        
       - name: check for existing pr to main
         id: existing-pr
         run: |
