@@ -3,7 +3,7 @@ name: validate
 on:
   push:
     branches:
-      - 'feature/**'
+      - "feature/**"
   pull_request:
     branches:
       - develop
@@ -27,8 +27,8 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: install dependencies
         run: pnpm install --frozen-lockfile
@@ -40,7 +40,7 @@ jobs:
         run: pnpm lint
 
       - name: format check
-        run: pnpm exec biome format --check .
+        run: pnpm format
 
       - name: test
         run: pnpm test
