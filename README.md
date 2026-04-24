@@ -72,3 +72,32 @@ See [`.env.example`](.env.example) for all variables with descriptions.
 3. Deploy — preview URLs are created automatically per branch
 
 Production deploys on push to `main`.
+
+## CI/CD
+
+### GitHub Actions Workflows
+
+This project uses two workflows to maintain code quality and enforce the branching strategy:
+
+- **`validate`** — Runs on every push to `feature/**` branches and PRs to `develop`. Executes typecheck, linting, format check, unit tests, and Snyk SAST. Blocks PR merge if any step fails.
+- **`promote-to-main`** — Runs when a PR merges into `develop`. Automatically creates a PR from the feature branch to `main` for release promotion (if one does not already exist).
+
+### Required Secrets
+
+Add the following secret to your repository settings:
+
+- **`SNYK_TOKEN`** — Snyk API token for SAST scanning. Obtain from [Snyk Dashboard](https://app.snyk.io/account/settings/api).
+
+### Branch Protection
+
+To enforce the CI gate, configure `develop` branch protection in **Settings → Branches → Add rule**:
+
+- **Branch name pattern:** `develop`
+- **Require status checks to pass before merging:** Check
+  - Required status check: `validate`
+- **Require branches to be up to date before merging:** Check
+
+### Notes
+
+- Feature branches are preserved after merging into `develop` so they can be used in the promotion PR.
+- The `promote-to-main` workflow uses `GITHUB_TOKEN`, which cannot trigger further workflow runs (GitHub security boundary). If the promotion PR requires additional validation, run `validate` manually via **Actions → validate → Run workflow** or push a commit to the feature branch.

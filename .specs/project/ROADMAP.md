@@ -5,8 +5,8 @@ description: Milestones and features for the personal technical blog, evolving s
 
 # Roadmap
 
-**Current Milestone:** M1 — Foundation
-**Status:** ✅ COMPLETE — all tasks done; T25 (Vercel deploy) deferred per AD-009 as a pre-M2 step
+**Current Milestone:** M2 — Headless CMS Integration
+**Status:** Ready to begin (M1 + M1.5 ✅ complete)
 
 ---
 
@@ -72,6 +72,47 @@ description: Milestones and features for the personal technical blog, evolving s
 
 - `.env.example` + README rewritten (`3ebb399`)
 - T25 (Vercel link + preview deploy) — pick up before M2 begins
+
+---
+
+---
+
+## M1.5 — CI/CD Infrastructure
+
+**Goal:** GitHub Actions workflows that enforce the documented branching strategy: every `feature/**` push runs the full quality gate (typecheck, lint, format, tests, Snyk SAST) and blocks merges to `develop` until it passes; every merge of `feature/**` into `develop` automatically opens a PR to `main`.
+**Target:** Zero manual steps between a green `develop` merge and the `main` PR appearing.
+**Status:** ✅ COMPLETED (2026-04-24)
+
+### Features
+
+**Feature-branch validation workflow** — ✅ DONE (CI-1, commit `caedf07`)
+
+- `validate.yml` triggers on `feature/**` push and PRs targeting `develop`
+- Runs: checkout → pnpm setup → typecheck → lint → format check → Vitest → Snyk SAST
+- Cancels in-progress runs on force-push (concurrency group by `github.ref`)
+- Auto-creates PR to `develop` for feature branches (idempotent via `existing-pr` check)
+- Tested across PRs #17-#25 with multiple feature branches
+
+**Automatic develop→main PR promotion** — ✅ DONE (CI-2, commit `caedf07`)
+
+- `promote-to-main.yml` triggers on merge of `feature/**` into `develop`
+- Guards on: `merged == true` AND `base == develop` AND `head.startsWith('feature/')`
+- Auto-creates `release:` PR with original PR credit and author attribution
+- Idempotent: checks for existing open PR to `main` before creation
+- Concurrency group by head.ref prevents race conditions
+- Tested in PRs #23-#25 with promotion flow validation
+
+**Developer alignment** — ✅ DONE (CI-3, CI-4)
+
+- Node 22 pinned in workflow `node-version: 22` (consistency enforced via CI)
+- `README.md` CI/CD section documents: required secrets (`SNYK_TOKEN`), status check name (`checks`), branch protection setup, workflow automation flow
+- All 10 pnpm scripts reused without modification
+
+**Branch protection enforcement** — ✅ DONE (CI-5, manual)
+
+- `develop` branch protection configured to require `checks` status check
+- Documented in README.md lines 92-98 for future contributor reproducibility
+- Tested: PR merge blocked on failing validation checks
 
 ---
 

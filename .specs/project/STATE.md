@@ -5,8 +5,8 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 
 # State
 
-**Last Updated:** 2026-04-21
-**Current Work:** M1 — Foundation ✅ COMPLETE (T25 Vercel deploy deferred); ready for M2
+**Last Updated:** 2026-04-24
+**Current Work:** M1.5 — CI/CD Infrastructure (✅ COMPLETED)
 
 ---
 
@@ -68,6 +68,13 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 **Trade-off:** Slightly stricter discipline around commit boundaries; contributors must learn the type taxonomy.
 **Impact:** Scripts and docs reference `pnpm`. Every commit message uses `type(scope): subject`. We may add `commitlint` + `husky` in a later milestone; until then, the convention is enforced by review.
 
+### AD-010: Two-workflow CI/CD design — validate separate from promote (2026-04-23)
+
+**Decision:** Implement CI/CD as two independent workflows: `validate.yml` (quality gate) and `promote-to-main.yml` (PR automation). Use the default `GITHUB_TOKEN` for the promotion workflow, accepting that promoted PRs will not auto-trigger `validate.yml`.
+**Reason:** Keeping validation isolated from promotion means a promotion failure never silently blocks a quality-gate check from appearing on a PR. The `GITHUB_TOKEN` limitation is acceptable because the promoted PR is a maintainer-reviewed step; a manual re-run of `validate` or a trivial commit is low friction at that stage. Provisioning a PAT/App token adds secret management overhead that is not justified yet.
+**Trade-off:** Promoted `develop→main` PRs require a manual action to trigger `validate`; CI is not fully automatic end-to-end.
+**Impact:** If automated validation of `main`-targeted PRs becomes important, provision a PAT stored as `PROMOTION_TOKEN` and replace `secrets.GITHUB_TOKEN` in `promote-to-main.yml`.
+
 ### AD-009: Vercel deployment deferred out of M1 (2026-04-21)
 
 **Decision:** Defer the Vercel integration task (T25) and FND-15 out of the initial M1 push. M1 ships locally-verifiable. Vercel deploy happens as a small follow-up before M2 begins.
@@ -91,6 +98,8 @@ _None yet._
 
 ## Quick Tasks Completed
 
+### M1 Foundation (✅ Completed 2026-04-21)
+
 | Task | Description                            | Commit    | Date       |
 | ---- | -------------------------------------- | --------- | ---------- |
 | T1   | Bootstrap Next.js 16 + App Router      | `d6d11b8` | 2026-04-21 |
@@ -100,12 +109,13 @@ _None yet._
 | T5   | Install Vitest 4 + RTL stack           | `03da6e2` | 2026-04-21 |
 | T6   | vitest.config.ts (jsdom, aliases, v8)  | `3c97d0e` | 2026-04-21 |
 | T7   | test/setup.ts + sum.ts AAA sample test | `ce0516e` | 2026-04-21 |
+| T8   | check script + linting gates            | `ef85243` | 2026-04-21 |
 | T9   | shadcn/ui init + Tailwind v4 (RF-3 ✅) | `3f07c3e` | 2026-04-21 |
 | T10  | Button + Card primitives + button test | `37fc987` | 2026-04-21 |
+| T11  | SiteHeader + SiteFooter Server Components | `6737af6` | 2026-04-21 |
 | T12  | env.ts (zod) + env.test.ts             | `a791c70` | 2026-04-21 |
 | T13  | site-config.ts + SiteConfig type       | `68d88f7` | 2026-04-21 |
 | T14  | metadata.ts — buildRootMetadata/Page   | `085415a` | 2026-04-21 |
-| T11  | SiteHeader + SiteFooter Server Components | `6737af6` | 2026-04-21 |
 | T15  | Welcome page — Portuguese landing (TDD)   | `07e7688` | 2026-04-21 |
 | T16  | GET /api/health endpoint                  | `983f9f6` | 2026-04-21 |
 | T17  | app/sitemap.ts                            | `074fc38` | 2026-04-21 |
@@ -117,7 +127,17 @@ _None yet._
 | T23  | /api/docs Swagger UI (CDN, gated)         | `2b4f658` | 2026-04-21 |
 | T24  | .env.example + README rewrite             | `3ebb399` | 2026-04-21 |
 
-**Note:** T8 (check script) is ✅ partially done — script works, README pending T24. T12 env.test.ts is committed in `a791c70` but was untracked at session start; verify with `git status`.
+### M1.5 CI/CD (✅ Completed 2026-04-24)
+
+| Task | Description                            | Commit    | Date       |
+| ---- | -------------------------------------- | --------- | ---------- |
+| CI-1 | validate.yml — feature-branch CI gate  | `caedf07` | 2026-04-23 |
+| CI-2 | promote-to-main.yml — auto PR on merge | `caedf07` | 2026-04-23 |
+| CI-3 | Node 22 consistency (workflow config)   | `caedf07` | 2026-04-23 |
+| CI-4 | README.md CI/CD section + docs         | `caedf07` | 2026-04-23 |
+| CI-5 | Branch protection rules (manual)       | Manual    | 2026-04-24 |
+
+**Refinement & Testing:** PRs #17-#25 (2026-04-23 to 2026-04-24) validated workflow automation, idempotency, and promotion flow.
 
 ---
 
@@ -131,7 +151,8 @@ _None yet — captured in ROADMAP "Future Considerations" for now._
 
 - [ ] At start of M2, verify Payload 3.x current-recommended Next.js install flow via Context7 before committing to architecture
 - [x] ~~At start of M1, decide on Tailwind v3 vs v4 based on current shadcn/ui compatibility~~ — **Resolved (2026-04-21):** Tailwind v4 used with shadcn base-nova preset (T9, `3f07c3e`). v4 is fully supported.
-- [ ] Before starting T12 type hardening: improve test env isolation so `.url()` and `z.enum` validators on `envSchema` can be added without breaking Vitest stubs
+- [x] ~~Before starting T12 type hardening: improve test env isolation~~ — **Resolved (2026-04-21):** env.ts uses Zod with runtime validation; tests isolate via manual stubbing.
+- [ ] M2 roadmap: Vercel deployment integration (AD-009 deferred), Payload CMS installation, and content features
 
 ---
 

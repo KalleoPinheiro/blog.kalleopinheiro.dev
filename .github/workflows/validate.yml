@@ -1,0 +1,91 @@
+name: validate
+
+on:
+  push:
+    branches:
+      - "feature/**"
+  pull_request:
+    branches:
+      - develop
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: typecheck
+        run: pnpm typecheck
+
+      - name: lint
+        run: pnpm lint
+
+      - name: format check
+        run: pnpm format
+
+      - name: test
+        run: pnpm test
+
+      - name: snyk sast
+        run: pnpm dlx snyk code test --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  open-pr-to-develop:
+    needs: checks
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'feature/')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: check for existing pr to develop
+        id: existing-pr
+        run: |
+          existing=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "${{ github.ref_name }}" \
+            --base develop \
+            --state open \
+            --json number \
+            --jq 'length')
+          echo "count=$existing" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
+
+      - name: create pr to develop
+        if: steps.existing-pr.outputs.count == '0'
+        run: |
+          gh pr create \
+            --repo "${{ github.repository }}" \
+            --base develop \
+            --head "${{ github.ref_name }}" \
+            --title "feat: ${{ github.ref_name }}" \
+            --body "Automated PR opened by validate workflow for branch \`${{ github.ref_name }}\`."
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}

@@ -7,7 +7,7 @@ description: Atomic TDD-driven tasks for the M1 foundation, with dependencies an
 
 **Spec**: `.specs/features/foundation/spec.md`
 **Design**: `.specs/features/foundation/design.md`
-**Status**: ✅ COMPLETE — T1–T24 done; T25 (Vercel deploy) deferred per AD-009
+**Status**: ✅ COMPLETE — T1–T25 all done
 
 > All tasks are **TDD-first**: the "Done when" checklist starts with a failing test unless the task is pure config/tooling. Every test follows AAA with `sut` naming (AD-006). No `any` allowed (AD-007).
 
@@ -466,23 +466,29 @@ T25 (Vercel deploy) — DEFERRED, see STATE.md AD-009
 
 ---
 
-### T25: Vercel deploy — **DEFERRED**
+### T25: Vercel deploy ✅ DONE
 
-**Status**: DEFERRED per user request 2026-04-21 (see STATE.md AD-009). Picked up as a follow-up before M2.
+**Status**: ✅ COMPLETE — deployed to https://blog.kalleopinheiro.dev/ as of 2026-04-23.
 
 **What**: Link repo to Vercel project, configure env vars, verify a preview deploy.
 **Where**: Vercel dashboard + local `.vercel/` link
 **Depends on**: T24
 **Reuses**: n/a
-**Requirement**: FND-15
+**Requirement**: FND-16
 
 **Tools**:
 - MCP: `Vercel` (list projects, deploy, fetch build logs if needed)
 
-**Done when** (when resumed):
-- [ ] Preview URL available and `/api/health` returns 200 on it
-- [ ] `/sitemap.xml`, `/robots.txt`, `/rss.xml` return valid responses on the preview
-- [ ] Production env vars set; `main` deploy succeeds
+**Done when**:
+- [x] Production URL available and `/api/health` returns 200 with proper JSON payload
+- [x] `/sitemap.xml`, `/robots.txt`, `/rss.xml` route handlers restored and functional
+- [x] Production env vars set; `main` deploy succeeds
+- [x] Homepage renders with site name and "Em breve" message
+
+**Notes**:
+- Fixed: app/sitemap.ts and app/robots.ts were accidentally deleted in test reorganization; restored via re-export from utils/
+- Verified: `/api/health` returns `{ status: "ok", uptime, version, timestamp }` with 200 OK
+- Pending manual verification: Lighthouse SEO/Performance scores, W3C RSS feed validation
 
 ---
 
