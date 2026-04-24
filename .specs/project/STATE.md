@@ -5,8 +5,8 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 
 # State
 
-**Last Updated:** 2026-04-21
-**Current Work:** M1 — Foundation ✅ COMPLETE (T25 Vercel deploy deferred); ready for M2
+**Last Updated:** 2026-04-23
+**Current Work:** M1.5 — CI/CD Infrastructure (IN PROGRESS)
 
 ---
 
@@ -67,6 +67,13 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 **Reason:** pnpm is fast, disk-efficient, and workspace-ready for when Payload adds modules. Conventional Commits produce a machine-readable history, enable automated changelog/release tooling, and make review diffs self-describing. One-commit-per-task keeps the history linear with the spec's requirement IDs.
 **Trade-off:** Slightly stricter discipline around commit boundaries; contributors must learn the type taxonomy.
 **Impact:** Scripts and docs reference `pnpm`. Every commit message uses `type(scope): subject`. We may add `commitlint` + `husky` in a later milestone; until then, the convention is enforced by review.
+
+### AD-010: Two-workflow CI/CD design — validate separate from promote (2026-04-23)
+
+**Decision:** Implement CI/CD as two independent workflows: `validate.yml` (quality gate) and `promote-to-main.yml` (PR automation). Use the default `GITHUB_TOKEN` for the promotion workflow, accepting that promoted PRs will not auto-trigger `validate.yml`.
+**Reason:** Keeping validation isolated from promotion means a promotion failure never silently blocks a quality-gate check from appearing on a PR. The `GITHUB_TOKEN` limitation is acceptable because the promoted PR is a maintainer-reviewed step; a manual re-run of `validate` or a trivial commit is low friction at that stage. Provisioning a PAT/App token adds secret management overhead that is not justified yet.
+**Trade-off:** Promoted `develop→main` PRs require a manual action to trigger `validate`; CI is not fully automatic end-to-end.
+**Impact:** If automated validation of `main`-targeted PRs becomes important, provision a PAT stored as `PROMOTION_TOKEN` and replace `secrets.GITHUB_TOKEN` in `promote-to-main.yml`.
 
 ### AD-009: Vercel deployment deferred out of M1 (2026-04-21)
 

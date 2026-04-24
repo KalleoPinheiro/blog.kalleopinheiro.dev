@@ -5,8 +5,8 @@ description: Milestones and features for the personal technical blog, evolving s
 
 # Roadmap
 
-**Current Milestone:** M1 — Foundation
-**Status:** ✅ COMPLETE — all tasks done; T25 (Vercel deploy) deferred per AD-009 as a pre-M2 step
+**Current Milestone:** M1.5 — CI/CD Infrastructure
+**Status:** 🔄 IN PROGRESS — workflows and docs being authored
 
 ---
 
@@ -72,6 +72,38 @@ description: Milestones and features for the personal technical blog, evolving s
 
 - `.env.example` + README rewritten (`3ebb399`)
 - T25 (Vercel link + preview deploy) — pick up before M2 begins
+
+---
+
+---
+
+## M1.5 — CI/CD Infrastructure
+
+**Goal:** GitHub Actions workflows that enforce the documented branching strategy: every `feature/**` push runs the full quality gate (typecheck, lint, format, tests, Snyk SAST) and blocks merges to `develop` until it passes; every merge of `feature/**` into `develop` automatically opens a PR to `main`.
+**Target:** Zero manual steps between a green `develop` merge and the `main` PR appearing.
+
+### Features
+
+**Feature-branch validation workflow** — PLANNED (CI-1)
+
+- `validate.yml` triggers on `feature/**` push and PRs targeting `develop`
+- Runs: typecheck → lint → format check → Vitest → Snyk SAST
+- Cancels in-progress runs on force-push (concurrency group)
+
+**Automatic develop→main PR promotion** — PLANNED (CI-2)
+
+- `promote-to-main.yml` triggers on merge of `feature/**` into `develop`
+- Auto-creates `release:` PR with original author credit
+- Idempotent: skips creation if PR already exists
+
+**Developer alignment** — PLANNED (CI-3, CI-4)
+
+- `.nvmrc` pins Node 22 to match CI
+- `README.md` CI/CD section documents required secrets, status check name, branch protection setup
+
+**Branch protection enforcement** — PLANNED (CI-5, manual)
+
+- `develop` requires `validate` check to pass before any merge
 
 ---
 
