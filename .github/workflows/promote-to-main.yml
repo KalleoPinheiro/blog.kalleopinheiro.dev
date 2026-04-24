@@ -7,10 +7,17 @@ on:
     types:
       - closed
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
+  cancel-in-progress: false
+
 jobs:
   promote:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'feature/')
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'develop' &&
+      startsWith(github.event.pull_request.head.ref, 'feature/')
 
     permissions:
       contents: write
@@ -29,9 +36,9 @@ jobs:
             --jq 'length')
           echo "count=$existing" >> $GITHUB_OUTPUT
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
-      - name: create promotion pr
+      - name: create promotion pr to main
         if: steps.existing-pr.outputs.count == '0'
         run: |
           gh pr create \
@@ -41,4 +48,4 @@ jobs:
             --title "release: ${{ github.event.pull_request.title }}" \
             --body "Promotion of ${{ github.event.pull_request.html_url }} (merged by @${{ github.event.pull_request.merged_by.login }})."
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
