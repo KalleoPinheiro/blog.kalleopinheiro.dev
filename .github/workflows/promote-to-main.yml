@@ -7,19 +7,23 @@ on:
     types:
       - closed
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
+  cancel-in-progress: false
+
 jobs:
   promote:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'feature/')
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'develop' &&
+      startsWith(github.event.pull_request.head.ref, 'feature/')
 
     permissions:
       contents: write
       pull-requests: write
 
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        
       - name: check for existing pr to main
         id: existing-pr
         run: |
@@ -34,7 +38,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: create promotion pr
+      - name: create promotion pr to main
         if: steps.existing-pr.outputs.count == '0'
         run: |
           gh pr create \

@@ -9,16 +9,12 @@ on:
       - develop
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  checks:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      pull-requests: write
 
     steps:
       - name: checkout
@@ -55,12 +51,25 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+  open-pr-to-develop:
+    needs: checks
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'feature/')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
       - name: check for existing pr to develop
         id: existing-pr
         run: |
           existing=$(gh pr list \
             --repo "${{ github.repository }}" \
-            --head "${{ github.event.pull_request.head.ref }}" \
+            --head "${{ github.ref_name }}" \
             --base develop \
             --state open \
             --json number \
@@ -69,14 +78,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: create promotion pr
+      - name: create pr to develop
         if: steps.existing-pr.outputs.count == '0'
         run: |
           gh pr create \
             --repo "${{ github.repository }}" \
             --base develop \
-            --head "${{ github.event.pull_request.head.ref }}" \
-            --title "release: ${{ github.event.pull_request.title }}" \
-            --body "Promotion of ${{ github.event.pull_request.html_url }} (merged by @${{ github.event.pull_request.merged_by.login }})."
+            --head "${{ github.ref_name }}" \
+            --title "feat: ${{ github.ref_name }}" \
+            --body "Automated PR opened by validate workflow for branch \`${{ github.ref_name }}\`."
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
