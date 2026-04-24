@@ -49,3 +49,15 @@ jobs:
         run: pnpm dlx snyk code test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: create promotion pr
+        if: steps.existing-pr.outputs.count == '0'
+        run: |
+          gh pr create \
+            --repo "${{ github.repository }}" \
+            --base develop \
+            --head "${{ github.event.pull_request.head.ref }}" \
+            --title "release: ${{ github.event.pull_request.title }}" \
+            --body "Promotion of ${{ github.event.pull_request.html_url }} (merged by @${{ github.event.pull_request.merged_by.login }})."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
