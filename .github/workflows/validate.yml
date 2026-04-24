@@ -15,6 +15,11 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -49,6 +54,20 @@ jobs:
         run: pnpm dlx snyk code test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: check for existing pr to develop
+        id: existing-pr
+        run: |
+          existing=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "${{ github.event.pull_request.head.ref }}" \
+            --base develop \
+            --state open \
+            --json number \
+            --jq 'length')
+          echo "count=$existing" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: create promotion pr
         if: steps.existing-pr.outputs.count == '0'
