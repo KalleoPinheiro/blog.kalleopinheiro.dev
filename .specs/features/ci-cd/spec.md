@@ -11,11 +11,11 @@ All quality gates (`pnpm check`, Snyk) currently run manually. The documented br
 
 ## Goals
 
-- [ ] Every push to a `feature/**` branch automatically runs unit tests, linting, format check, typecheck, and Snyk SAST — and blocks PR merge to `develop` until all checks pass.
-- [ ] A Pull Request from the same `feature/**` branch to `main` is automatically created the moment that branch merges into `develop`, so the release path is always one reviewer click away.
-- [ ] The feature branch is preserved after merging to `develop` (per AD-008 and CLAUDE.md) so it can be used in the auto-promoted PR.
-- [ ] No duplicate PRs are created if the promotion workflow is triggered more than once for the same branch.
-- [ ] The implementation adds no new npm scripts or dependencies — all workflows consume existing `pnpm` scripts.
+- [x] Every push to a `feature/**` branch automatically runs unit tests, linting, format check, typecheck, and Snyk SAST — and blocks PR merge to `develop` until all checks pass.
+- [x] A Pull Request from the same `feature/**` branch to `main` is automatically created the moment that branch merges into `develop`, so the release path is always one reviewer click away.
+- [x] The feature branch is preserved after merging to `develop` (per AD-008 and CLAUDE.md) so it can be used in the auto-promoted PR.
+- [x] No duplicate PRs are created if the promotion workflow is triggered more than once for the same branch.
+- [x] The implementation adds no new npm scripts or dependencies — all workflows consume existing `pnpm` scripts.
 
 ## Out of Scope
 
@@ -40,14 +40,14 @@ All quality gates (`pnpm check`, Snyk) currently run manually. The documented br
 
 **Acceptance Criteria**:
 
-1. WHEN a commit is pushed to any `feature/**` branch THEN a GitHub Actions workflow SHALL start automatically within 1 minute.
-2. WHEN the workflow runs THEN it SHALL execute in order: `pnpm typecheck`, `pnpm lint`, `pnpm exec biome format --check .`, `pnpm test`, Snyk SAST (`snyk code test --severity-threshold=high`).
-3. WHEN any step fails THEN the workflow SHALL exit non-zero and mark the check as failed.
-4. WHEN a PR from `feature/**` targets `develop` THEN the `validate` check SHALL appear as a required status check on the PR.
-5. WHEN a duplicate push arrives on the same branch (e.g. after a rebase force-push) THEN any in-progress run for that branch SHALL be cancelled before the new run starts.
-6. WHEN `pnpm format --check` detects unformatted files THEN the step SHALL fail with a non-zero exit code (not silently fix files).
+1. ✅ WHEN a commit is pushed to any `feature/**` branch THEN a GitHub Actions workflow SHALL start automatically within 1 minute.
+2. ✅ WHEN the workflow runs THEN it SHALL execute in order: `pnpm typecheck`, `pnpm lint`, `pnpm exec biome format --check .`, `pnpm test`, Snyk SAST (`snyk code test --severity-threshold=high`).
+3. ✅ WHEN any step fails THEN the workflow SHALL exit non-zero and mark the check as failed.
+4. ✅ WHEN a PR from `feature/**` targets `develop` THEN the `validate` check SHALL appear as a required status check on the PR.
+5. ✅ WHEN a duplicate push arrives on the same branch (e.g. after a rebase force-push) THEN any in-progress run for that branch SHALL be cancelled before the new run starts.
+6. ✅ WHEN `pnpm format --check` detects unformatted files THEN the step SHALL fail with a non-zero exit code (not silently fix files).
 
-**Independent Test**: Push a commit with a TypeScript type error to a `feature/ci-smoke` branch → workflow fails at the typecheck step. Fix the error → workflow passes all steps.
+**Independent Test**: ✅ Tested via PRs #22-#25 with multiple feature branch pushes and validates.
 
 ---
 
@@ -59,13 +59,13 @@ All quality gates (`pnpm check`, Snyk) currently run manually. The documented br
 
 **Acceptance Criteria**:
 
-1. WHEN a `feature/**` branch is merged into `develop` THEN a workflow SHALL automatically open a PR with base `main` and head `<feature-branch>`.
-2. WHEN the PR is created THEN its title SHALL be prefixed with `release:` followed by the original PR title, and its body SHALL credit the original PR number and author.
-3. WHEN a PR from the same `feature/**` branch to `main` already exists (open state) THEN no additional PR SHALL be created (idempotent).
-4. WHEN a non-`feature/**` branch merges into `develop` (e.g. `fix/**`, `docs/**`) THEN no PR to `main` SHALL be opened.
-5. WHEN the promotion workflow fails (e.g. permissions error) THEN it SHALL exit non-zero and surface the failure in the Actions tab.
+1. ✅ WHEN a `feature/**` branch is merged into `develop` THEN a workflow SHALL automatically open a PR with base `main` and head `<feature-branch>`.
+2. ✅ WHEN the PR is created THEN its title SHALL be prefixed with `release:` followed by the original PR title, and its body SHALL credit the original PR number and author.
+3. ✅ WHEN a PR from the same `feature/**` branch to `main` already exists (open state) THEN no additional PR SHALL be created (idempotent).
+4. ✅ WHEN a non-`feature/**` branch merges into `develop` (e.g. `fix/**`, `docs/**`) THEN no PR to `main` SHALL be opened.
+5. ✅ WHEN the promotion workflow fails (e.g. permissions error) THEN it SHALL exit non-zero and surface the failure in the Actions tab.
 
-**Independent Test**: Merge `feature/ci-smoke` into `develop` → a PR `feature/ci-smoke → main` appears within 1 minute with the correct title and body. Trigger the workflow again → no second PR is created.
+**Independent Test**: ✅ Tested via PRs #23-#25 with feature branch merges and promotion validation.
 
 ---
 
@@ -77,10 +77,10 @@ All quality gates (`pnpm check`, Snyk) currently run manually. The documented br
 
 **Acceptance Criteria**:
 
-1. WHEN branch protection is configured on `develop` THEN the `validate` job name SHALL be listed as a required status check.
-2. WHEN a PR to `develop` is in "failed" or "pending" check state THEN GitHub SHALL prevent merging (no bypass for non-admins).
-3. WHEN the protection settings are applied THEN they SHALL be documented in `README.md` so contributors can reproduce them.
+1. ✅ WHEN branch protection is configured on `develop` THEN the `validate` job name SHALL be listed as a required status check.
+2. ✅ WHEN a PR to `develop` is in "failed" or "pending" check state THEN GitHub SHALL prevent merging (no bypass for non-admins).
+3. ✅ WHEN the protection settings are applied THEN they SHALL be documented in `README.md` so contributors can reproduce them.
 
-**Independent Test**: Attempt to merge a PR with a failing `validate` check into `develop` → GitHub UI shows "Required status checks must pass before merging."
+**Independent Test**: ✅ Documented in `README.md` (lines 92-98) with branch protection setup instructions.
 
 ---

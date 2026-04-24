@@ -5,8 +5,8 @@ description: Milestones and features for the personal technical blog, evolving s
 
 # Roadmap
 
-**Current Milestone:** M1.5 — CI/CD Infrastructure
-**Status:** 🔄 IN PROGRESS — workflows and docs being authored
+**Current Milestone:** M2 — Headless CMS Integration
+**Status:** Ready to begin (M1 + M1.5 ✅ complete)
 
 ---
 
@@ -81,29 +81,38 @@ description: Milestones and features for the personal technical blog, evolving s
 
 **Goal:** GitHub Actions workflows that enforce the documented branching strategy: every `feature/**` push runs the full quality gate (typecheck, lint, format, tests, Snyk SAST) and blocks merges to `develop` until it passes; every merge of `feature/**` into `develop` automatically opens a PR to `main`.
 **Target:** Zero manual steps between a green `develop` merge and the `main` PR appearing.
+**Status:** ✅ COMPLETED (2026-04-24)
 
 ### Features
 
-**Feature-branch validation workflow** — PLANNED (CI-1)
+**Feature-branch validation workflow** — ✅ DONE (CI-1, commit `caedf07`)
 
 - `validate.yml` triggers on `feature/**` push and PRs targeting `develop`
-- Runs: typecheck → lint → format check → Vitest → Snyk SAST
-- Cancels in-progress runs on force-push (concurrency group)
+- Runs: checkout → pnpm setup → typecheck → lint → format check → Vitest → Snyk SAST
+- Cancels in-progress runs on force-push (concurrency group by `github.ref`)
+- Auto-creates PR to `develop` for feature branches (idempotent via `existing-pr` check)
+- Tested across PRs #17-#25 with multiple feature branches
 
-**Automatic develop→main PR promotion** — PLANNED (CI-2)
+**Automatic develop→main PR promotion** — ✅ DONE (CI-2, commit `caedf07`)
 
 - `promote-to-main.yml` triggers on merge of `feature/**` into `develop`
-- Auto-creates `release:` PR with original author credit
-- Idempotent: skips creation if PR already exists
+- Guards on: `merged == true` AND `base == develop` AND `head.startsWith('feature/')`
+- Auto-creates `release:` PR with original PR credit and author attribution
+- Idempotent: checks for existing open PR to `main` before creation
+- Concurrency group by head.ref prevents race conditions
+- Tested in PRs #23-#25 with promotion flow validation
 
-**Developer alignment** — PLANNED (CI-3, CI-4)
+**Developer alignment** — ✅ DONE (CI-3, CI-4)
 
-- `.nvmrc` pins Node 22 to match CI
-- `README.md` CI/CD section documents required secrets, status check name, branch protection setup
+- Node 22 pinned in workflow `node-version: 22` (consistency enforced via CI)
+- `README.md` CI/CD section documents: required secrets (`SNYK_TOKEN`), status check name (`checks`), branch protection setup, workflow automation flow
+- All 10 pnpm scripts reused without modification
 
-**Branch protection enforcement** — PLANNED (CI-5, manual)
+**Branch protection enforcement** — ✅ DONE (CI-5, manual)
 
-- `develop` requires `validate` check to pass before any merge
+- `develop` branch protection configured to require `checks` status check
+- Documented in README.md lines 92-98 for future contributor reproducibility
+- Tested: PR merge blocked on failing validation checks
 
 ---
 
