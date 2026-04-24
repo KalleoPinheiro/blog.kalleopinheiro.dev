@@ -76,7 +76,7 @@ jobs:
             --jq 'length')
           echo "count=$existing" >> $GITHUB_OUTPUT
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
       - name: create pr to develop
         if: steps.existing-pr.outputs.count == '0'
@@ -88,4 +88,4 @@ jobs:
             --title "feat: ${{ github.ref_name }}" \
             --body "Automated PR opened by validate workflow for branch \`${{ github.ref_name }}\`."
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
