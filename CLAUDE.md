@@ -85,9 +85,10 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 
 ### Framework & Compiler
 
-- **Next.js 16** (App Router, Server Components first)
-- **React Compiler** enabled (`reactCompiler: true`)
+- **Next.js 16.2.4** (App Router, Server Components first)
+- **React 19.2.4** with **React Compiler** enabled (`reactCompiler: true`)
 - **TypeScript strict mode** with `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`
+- **Database**: PostgreSQL with Prisma ORM (client initializes with build-time fallback to handle missing DB_URL during builds)
 
 ### Code Organization
 
@@ -96,30 +97,34 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 - `app/` — Next.js App Router with `(public)` route group, API routes, and dynamic generators (robots.txt, sitemap.xml, RSS feed)
   - `admin/` — CMS admin interface (authors, pages, posts, media, comments)
   - `api/` — REST endpoints: health check, CMS operations
-- `components/` — React components: `ui/` (shadcn/ui primitives), `layouts/`, `common/`, `providers/`
-- `utils/` — Config and generators: env.ts (Zod schema), metadata builders, site-config, utility helpers
-- `cms/` — CMS infrastructure: Prisma client, data normalization, hooks registry
+- `components/` — React components: `ui/` (shadcn/ui components, Radix primitives), `layouts/`
+- `cms/` — CMS infrastructure
+  - `schemas/` — Zod validation schemas for Author, Post, Page, Media, Comment
+  - `hooks/` — CMS operation hooks registry
+  - `utils/` — Data normalization and transformation utilities
+- `lib/` — Utilities: Prisma client initialization with build-time fallback
+- `utils/` — Config and generators: env.ts (Zod schema), metadata builders, utility helpers
 - `features/`, `hooks/`, `services/`, `types/` — Reserved for future domain-driven expansion
 
 **Tests (`tests/`)**
 
 - `tests/unit/` — Mirrors source structure, each file has `.test.ts(x)` equivalent
+- `tests/e2e/` — End-to-end tests
 - Vitest + React Testing Library with `jsdom` environment
 - Setup file: `tests/setup.ts`
-- Coverage gates: `src/utils/` and `src/app/api/` at 80% threshold
 
 ### Key Dependencies
 
-- **Styling:** Tailwind CSS v4 + shadcn/ui for components
+- **Styling:** Tailwind CSS v4 + shadcn/ui (Radix primitives, components copied into `src/components/ui/`)
 - **Validation:** Zod for environment variables and schemas
 - **Linting/Formatting:** Biome (replaces ESLint + Prettier)
 - **API Docs:** Swagger UI (controllable via `ENABLE_API_DOCS` env var)
-- **CMS:** Prisma ORM with data normalization layer
+- **Database:** PostgreSQL with Prisma ORM + data normalization layer (`src/cms/`)
 
 ### Security
 
-- **CSP headers** with `unsafe-eval` only in development (React Compiler debugging)
-- **HSTS**, **X-Frame-Options: DENY**, **X-Content-Type-Options: nosniff**, referrer policy
+- **CSP headers**: `default-src 'self'`, `script-src` and `style-src` with `unsafe-inline` always + `unsafe-eval` in development for React Compiler
+- **HSTS** (max-age 63072000), **X-Frame-Options: DENY**, **X-Content-Type-Options: nosniff**, **Referrer-Policy: strict-origin-when-cross-origin**
 - **Strict module resolution** and no untrusted imports
 
 ### API Endpoints
@@ -131,11 +136,14 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 
 ## Testing Standards
 
-- **Framework**: Vitest + React Testing Library
+- **Framework**: Vitest + React Testing Library (`jsdom` environment)
 - **Pattern**: AAA (Arrange, Act, Assert) with `sut` variable
 - **Typing**: No `any` in tests (enforced by lint)
 - **Imports**: Absolute paths with `@/` alias
-- **Organization**: Tests are separate (`tests/`) but mirrors source structure
+- **Organization**:
+  - Unit tests in `tests/unit/` mirror source structure
+  - E2E tests in `tests/e2e/`
+  - Coverage gates: `src/lib/**/*.ts` and `src/app/api/**/*.ts` (v8 provider, reporters: text/json/html)
 
 ## Code Quality Standards
 
