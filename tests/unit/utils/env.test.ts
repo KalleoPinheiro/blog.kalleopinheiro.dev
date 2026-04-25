@@ -30,7 +30,7 @@ describe("env", () => {
   });
 
   it("should use default for NODE_ENV when missing", () => {
-    vi.unstubAllEnvs();
+    delete process.env.NODE_ENV;
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
     vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
 
@@ -40,7 +40,7 @@ describe("env", () => {
   });
 
   it("should use default for APP_VERSION when missing", () => {
-    vi.unstubAllEnvs();
+    delete process.env.APP_VERSION;
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
     vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
 
@@ -64,7 +64,7 @@ describe("env", () => {
   });
 
   it("should throw when NEXT_PUBLIC_SITE_URL is missing", () => {
-    vi.unstubAllEnvs();
+    delete process.env.NEXT_PUBLIC_SITE_URL;
     vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
 
     expect(() => createEnv()).toThrow();
