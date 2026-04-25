@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { Faker, pt_BR } from "@faker-js/faker";
 import {
   CreateAuthorSchema,
   CreateCommentSchema,
@@ -6,10 +6,11 @@ import {
   CreatePageSchema,
   CreatePostSchema,
 } from "@/cms/schemas";
+import { normalizeData } from "@/cms/utils/normalize";
 import { prisma } from "@/lib/db";
 
+const faker = new Faker({ locale: [pt_BR] });
 faker.seed(42);
-faker.setLocale("pt_BR");
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -43,7 +44,7 @@ async function seed() {
     }
 
     const media = await prisma.media.create({
-      data: validated.data,
+      data: normalizeData(validated.data),
     });
     mediaIds.push(media.id);
   }
@@ -73,7 +74,7 @@ async function seed() {
     }
 
     const author = await prisma.author.create({
-      data: validated.data,
+      data: normalizeData(validated.data),
     });
     authorIds.push(author.id);
   }
@@ -107,7 +108,7 @@ async function seed() {
     }
 
     const post = await prisma.post.create({
-      data: validated.data,
+      data: normalizeData(validated.data),
     });
     postIds.push(post.id);
   }
@@ -130,7 +131,7 @@ async function seed() {
     }
 
     await prisma.page.create({
-      data: validated.data,
+      data: normalizeData(validated.data),
     });
   }
 
@@ -152,7 +153,7 @@ async function seed() {
     }
 
     await prisma.comment.create({
-      data: validated.data,
+      data: normalizeData(validated.data),
     });
   }
 
