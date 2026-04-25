@@ -5,7 +5,7 @@ import { CreateCommentSchema } from "@/cms/schemas/comment";
 import { normalizeData } from "@/cms/utils/normalize";
 import { prisma } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const comments = await prisma.comment.findMany({
       orderBy: { createdAt: "desc" },
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = CreateCommentSchema.parse(body);
     const comment = await prisma.comment.create({
-      data: normalizeData(validated as Record<string, unknown>),
+      data: normalizeData(validated),
     });
     return NextResponse.json(comment, { status: 201 });
   } catch (error) {

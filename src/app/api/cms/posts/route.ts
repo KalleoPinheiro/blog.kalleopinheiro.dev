@@ -5,11 +5,11 @@ import { CreatePostSchema } from "@/cms/schemas/post";
 import { normalizeData } from "@/cms/utils/normalize";
 import { prisma } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const { searchParams } = new URL(_req.url);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
     const posts = await prisma.post.findMany({
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const validated = CreatePostSchema.parse(body);
 
     const post = await prisma.post.create({
-      data: normalizeData(validated as Record<string, unknown>),
+      data: normalizeData(validated),
       include: { author: true },
     });
 

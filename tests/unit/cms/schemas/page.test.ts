@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { PageSchema, CreatePageSchema } from "@/cms/schemas/page";
+import { describe, expect, it } from "vitest";
+import { CreatePageSchema, PageSchema } from "@/cms/schemas/page";
 
 describe("Page Schema", () => {
   const validPageData = {

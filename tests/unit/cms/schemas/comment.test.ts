@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { CommentSchema, CreateCommentSchema } from "@/cms/schemas/comment";
 
 describe("Comment Schema", () => {

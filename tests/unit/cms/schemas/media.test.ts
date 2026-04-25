@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { MediaSchema, CreateMediaSchema } from "@/cms/schemas/media";
+import { describe, expect, it } from "vitest";
+import { CreateMediaSchema, MediaSchema } from "@/cms/schemas/media";
 
 describe("Media Schema", () => {
   const validMediaData = {

@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db";
 
 type Params = Promise<{ id: string }>;
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
+export async function GET(_req: NextRequest, { params }: { params: Params }) {
   try {
     const { id } = await params;
 
@@ -38,7 +38,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
 
     const post = await prisma.post.update({
       where: { id },
-      data: normalizeData(validated as Record<string, unknown>),
+      data: normalizeData(validated),
       include: { author: true },
     });
 
@@ -58,7 +58,10 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Params }) {
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Params },
+) {
   try {
     const { id } = await params;
 

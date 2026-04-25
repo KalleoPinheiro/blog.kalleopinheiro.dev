@@ -5,7 +5,7 @@ import { CreatePageSchema } from "@/cms/schemas/page";
 import { normalizeData } from "@/cms/utils/normalize";
 import { prisma } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const pages = await prisma.page.findMany({
       orderBy: { createdAt: "desc" },
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = CreatePageSchema.parse(body);
     const page = await prisma.page.create({
-      data: normalizeData(validated as Record<string, unknown>),
+      data: normalizeData(validated),
     });
     return NextResponse.json(page, { status: 201 });
   } catch (error) {

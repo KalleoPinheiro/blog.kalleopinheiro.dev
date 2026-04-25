@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db";
 
 type Params = Promise<{ id: string }>;
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
+export async function GET(_req: NextRequest, { params }: { params: Params }) {
   try {
     const { id } = await params;
     const author = await prisma.author.findUnique({ where: { id } });
@@ -31,7 +31,7 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     const validated = UpdateAuthorSchema.parse(body);
     const author = await prisma.author.update({
       where: { id },
-      data: normalizeData(validated as Record<string, unknown>),
+      data: normalizeData(validated),
     });
     return NextResponse.json(author);
   } catch (error) {
@@ -49,7 +49,10 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Params }) {
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Params },
+) {
   try {
     const { id } = await params;
     await prisma.author.delete({ where: { id } });

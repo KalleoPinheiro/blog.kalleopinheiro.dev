@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-import { CreateAuthorSchema, UpdateAuthorSchema } from "@/cms/schemas/author";
+import { CreateAuthorSchema } from "@/cms/schemas/author";
 import { normalizeData } from "@/cms/utils/normalize";
 import { prisma } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const authors = await prisma.author.findMany({
       orderBy: { createdAt: "desc" },
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = CreateAuthorSchema.parse(body);
     const author = await prisma.author.create({
-      data: normalizeData(validated as Record<string, unknown>),
+      data: normalizeData(validated),
     });
     return NextResponse.json(author, { status: 201 });
   } catch (error) {
