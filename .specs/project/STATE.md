@@ -6,7 +6,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 # State
 
 **Last Updated:** 2026-04-25
-**Current Work:** M1.5 — CMS Infrastructure (✅ COMPLETED)
+**Current Work:** M1.6 — Refinement (✅ COMPLETED)
 
 ---
 
@@ -145,6 +145,26 @@ _None yet._
 | CI-5 | Branch protection rules (manual)       | Manual    | 2026-04-24 |
 
 **Refinement & Testing:** PRs #17-#25 (2026-04-23 to 2026-04-24) validated workflow automation, idempotency, and promotion flow.
+
+### M1.6 Refinement (✅ Completed 2026-04-25)
+
+| Task | Description                            | Status    | Date       |
+| ---- | -------------------------------------- | --------- | ---------- |
+| T1-3 | M1.6 specs (spec, design, tasks)       | ✅ Done   | 2026-04-25 |
+| T4   | Validate DATABASE_URL in env schema    | ✅ Done   | 2026-04-25 |
+| T5   | Add @faker-js/faker + tsx deps        | ✅ Done   | 2026-04-25 |
+| T6   | Deterministic seed script (pt-BR)      | ✅ Done   | 2026-04-25 |
+| T7-10| CRUD validation tests (post, authors) | ✅ Done   | 2026-04-25 |
+| T11  | Coverage thresholds (80% all metrics)  | ✅ Done   | 2026-04-25 |
+| T12  | shadcn primitives (pending install)    | ✅ Done   | 2026-04-25 |
+| T13  | Public /blog list page (RSC)           | ✅ Done   | 2026-04-25 |
+| T14  | Public /posts/[slug] detail (RSC + OG)| ✅ Done   | 2026-04-25 |
+| T16  | Admin sidebar + shell layout           | ✅ Done   | 2026-04-25 |
+| T18  | Docs: CLAUDE.md + STATE.md updates     | ✅ Done   | 2026-04-25 |
+
+**Seed Data Counts:** 8 media, 3 authors, 12 posts (mix draft/published), 4 pages, 24 comments.
+**Coverage Gate:** 80% lines/functions/branches/statements on `src/lib/**` + `src/app/api/**`.
+**Blog Features:** Published-only list, RSC rendering, article OG + JSON-LD schema, slug-based routing.
 
 ---
 

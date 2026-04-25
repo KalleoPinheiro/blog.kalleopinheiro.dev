@@ -1,20 +1,24 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createEnv } from "@/utils/env";
 
 describe("env", () => {
-  const originalEnv = process.env;
+  const originalEnv = { ...process.env };
 
   beforeEach(() => {
-    process.env = { ...originalEnv };
+    vi.stubEnv("NODE_ENV", originalEnv.NODE_ENV || "development");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", originalEnv.NEXT_PUBLIC_SITE_URL || "");
+    vi.stubEnv("DATABASE_URL", originalEnv.DATABASE_URL || "");
+    vi.stubEnv("APP_VERSION", originalEnv.APP_VERSION || "dev");
+    vi.stubEnv("ENABLE_API_DOCS", originalEnv.ENABLE_API_DOCS || "false");
     vi.resetModules();
   });
 
   it("should parse valid env vars", () => {
-    process.env.NODE_ENV = "development";
-    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
-    process.env.DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-    process.env.APP_VERSION = "1.0.0";
-    process.env.ENABLE_API_DOCS = "true";
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
+    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
+    vi.stubEnv("APP_VERSION", "1.0.0");
+    vi.stubEnv("ENABLE_API_DOCS", "true");
 
     const sut = createEnv();
 
@@ -26,9 +30,9 @@ describe("env", () => {
   });
 
   it("should use default for NODE_ENV when missing", () => {
-    delete process.env.NODE_ENV;
-    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
-    process.env.DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
+    vi.stubEnv("NODE_ENV", "");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
+    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
 
     const sut = createEnv();
 
@@ -36,9 +40,9 @@ describe("env", () => {
   });
 
   it("should use default for APP_VERSION when missing", () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
-    process.env.DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-    delete process.env.APP_VERSION;
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
+    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
+    vi.stubEnv("APP_VERSION", "");
 
     const sut = createEnv();
 
@@ -46,22 +50,22 @@ describe("env", () => {
   });
 
   it("should throw when DATABASE_URL is missing", () => {
-    delete process.env.DATABASE_URL;
-    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
+    vi.stubEnv("DATABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
 
     expect(() => createEnv()).toThrow();
   });
 
   it("should throw when DATABASE_URL is not a valid URL", () => {
-    process.env.DATABASE_URL = "not-a-url";
-    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com";
+    vi.stubEnv("DATABASE_URL", "not-a-url");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
 
     expect(() => createEnv()).toThrow();
   });
 
   it("should throw when NEXT_PUBLIC_SITE_URL is missing", () => {
-    delete process.env.NEXT_PUBLIC_SITE_URL;
-    process.env.DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
+    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
 
     expect(() => createEnv()).toThrow();
   });
