@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createEnv } from "@/utils/env";
+import { createEnv, envSchema } from "@/utils/env";
 
 describe("env", () => {
   const originalEnv = { ...process.env };
@@ -30,43 +30,45 @@ describe("env", () => {
   });
 
   it("should use default for NODE_ENV when missing", () => {
-    delete process.env.NODE_ENV;
-    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
-    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
-
-    const sut = createEnv();
+    const sut = envSchema.parse({
+      NEXT_PUBLIC_SITE_URL: "https://example.com",
+      DATABASE_URL: "postgresql://user:pass@localhost:5432/db",
+    });
 
     expect(sut.NODE_ENV).toBe("development");
   });
 
   it("should use default for APP_VERSION when missing", () => {
-    delete process.env.APP_VERSION;
-    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
-    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
-
-    const sut = createEnv();
+    const sut = envSchema.parse({
+      NEXT_PUBLIC_SITE_URL: "https://example.com",
+      DATABASE_URL: "postgresql://user:pass@localhost:5432/db",
+    });
 
     expect(sut.APP_VERSION).toBe("dev");
   });
 
   it("should throw when DATABASE_URL is missing", () => {
-    vi.stubEnv("DATABASE_URL", "");
-    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
-
-    expect(() => createEnv()).toThrow();
+    expect(() =>
+      envSchema.parse({
+        NEXT_PUBLIC_SITE_URL: "https://example.com",
+      }),
+    ).toThrow();
   });
 
   it("should throw when DATABASE_URL is not a valid URL", () => {
-    vi.stubEnv("DATABASE_URL", "not-a-url");
-    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
-
-    expect(() => createEnv()).toThrow();
+    expect(() =>
+      envSchema.parse({
+        NEXT_PUBLIC_SITE_URL: "https://example.com",
+        DATABASE_URL: "not-a-url",
+      }),
+    ).toThrow();
   });
 
   it("should throw when NEXT_PUBLIC_SITE_URL is missing", () => {
-    delete process.env.NEXT_PUBLIC_SITE_URL;
-    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
-
-    expect(() => createEnv()).toThrow();
+    expect(() =>
+      envSchema.parse({
+        DATABASE_URL: "postgresql://user:pass@localhost:5432/db",
+      }),
+    ).toThrow();
   });
 });
