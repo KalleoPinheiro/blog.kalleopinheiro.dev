@@ -28,16 +28,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Development workflow:** Run `pnpm check` before committing. Run `pnpm dev` for local development with hot reload.
 
-**Before finalizing a feature, all validation checks MUST pass:**
+**Pre-commit validation (MANDATORY):**
+
+All checks MUST pass locally before any commit:
+
+```bash
+pnpm check        # Single command: typecheck + lint + test (recommended)
+```
+
+Or individually:
 
 ```bash
 pnpm typecheck    # TypeScript strict check
 pnpm lint         # Biome lint check
-pnpm format       # Biome format (verify no changes needed)
+pnpm format       # Biome format (fix formatting issues)
 pnpm test         # Run all unit tests
 ```
 
-These are the same checks run by the `validate.yml` GitHub Actions workflow. Failing any check blocks PR merge to `develop`.
+**Critical:** Do NOT commit if any check fails. These same checks run in CI (`validate.yml`). Failing CI blocks PR merge to `develop`.
+
+**Pre-commit checklist:**
+- [ ] `pnpm check` passes locally
+- [ ] `pnpm format` produces no changes (already formatted)
+- [ ] All tests pass (`pnpm test`)
+- [ ] No TypeScript errors (`pnpm typecheck`)
+- [ ] No lint errors (`pnpm lint`)
 
 ## Development Methodology
 
