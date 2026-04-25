@@ -48,6 +48,7 @@ pnpm test         # Run all unit tests
 **Critical:** Do NOT commit if any check fails. These same checks run in CI (`validate.yml`). Failing CI blocks PR merge to `develop`.
 
 **Pre-commit checklist:**
+
 - [ ] `pnpm check` passes locally
 - [ ] `pnpm format` produces no changes (already formatted)
 - [ ] All tests pass (`pnpm test`)
