@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Author {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(200)
+  email     String   @unique @db.VarChar(255)
+  bio       String   @db.VarChar(1000) @default("")
+  avatarId  String?  @unique
+  avatar    Media?   @relation("AuthorAvatar", fields: [avatarId], references: [id])
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String   @db.VarChar(200)
+  slug      String   @unique @db.VarChar(200)
+  content   String   @db.Text
+  excerpt   String   @db.VarChar(500)
+  authorId  String
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  status    String   @default("draft")
+  publishedAt DateTime?
+  tags      String[] @default([])
+  comments  Comment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([status])
+  @@index([slug])
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  title     String   @db.VarChar(200)
+  slug      String   @unique @db.VarChar(200)
+  content   String   @db.Text
+  status    String   @default("draft")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([slug])
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String   @db.Text
+  mimeType  String
+  size      Int
+  author    Author?  @relation("AuthorAvatar")
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    String   @db.VarChar(200)
+  email     String   @db.VarChar(255)
+  content   String   @db.Text
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([status])
+}
