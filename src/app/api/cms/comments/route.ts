@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { prisma } from "@/lib/db";
+
 import { CreateCommentSchema } from "@/cms/schemas/comment";
 import { normalizeData } from "@/cms/utils/normalize";
+import { prisma } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
     console.error("GET /api/cms/comments error:", error);
     return NextResponse.json(
       { error: "Failed to fetch comments" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -31,13 +32,13 @@ export async function POST(req: NextRequest) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
     console.error("POST /api/cms/comments error:", error);
     return NextResponse.json(
       { error: "Failed to create comment" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { prisma } from "@/lib/db";
+
 import { UpdateMediaSchema } from "@/cms/schemas/media";
 import { normalizeData } from "@/cms/utils/normalize";
+import { prisma } from "@/lib/db";
 
 type Params = Promise<{ id: string }>;
 
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
     console.error("GET /api/cms/media/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to fetch media" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -37,13 +38,13 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
     console.error("PUT /api/cms/media/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to update media" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -57,7 +58,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     console.error("DELETE /api/cms/media/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to delete media" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { prisma } from "@/lib/db";
+
 import { CreateMediaSchema } from "@/cms/schemas/media";
 import { normalizeData } from "@/cms/utils/normalize";
+import { prisma } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
     console.error("GET /api/cms/media error:", error);
     return NextResponse.json(
       { error: "Failed to fetch media" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -31,13 +32,13 @@ export async function POST(req: NextRequest) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
     console.error("POST /api/cms/media error:", error);
     return NextResponse.json(
       { error: "Failed to create media" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
