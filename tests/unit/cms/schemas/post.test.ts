@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  CreatePostSchema,
-  UpdatePostSchema,
-} from "@/cms/schemas/post";
+import { CreatePostSchema, UpdatePostSchema } from "@/cms/schemas/post";
 
 describe("PostSchema", () => {
   describe("CreatePostSchema", () => {
