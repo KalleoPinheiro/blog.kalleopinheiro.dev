@@ -1,7 +1,7 @@
+import { Suspense } from "react";
+import { PostList } from "@/components/blog/post-list";
 import { prisma } from "@/lib/db";
 import { buildPageMetadata } from "@/utils/metadata";
-import { PostList } from "@/components/blog/post-list";
-import { Suspense } from "react";
 
 export const metadata = buildPageMetadata({
   title: "Blog",
