@@ -28,6 +28,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Development workflow:** Run `pnpm check` before committing. Run `pnpm dev` for local development with hot reload.
 
+**Before finalizing a feature, all validation checks MUST pass:**
+
+```bash
+pnpm typecheck    # TypeScript strict check
+pnpm lint         # Biome lint check
+pnpm format       # Biome format (verify no changes needed)
+pnpm test         # Run all unit tests
+```
+
+These are the same checks run by the `validate.yml` GitHub Actions workflow. Failing any check blocks PR merge to `develop`.
+
 ## Development Methodology
 
 This project uses **Spec-Driven Development (SDD)** — specifications drive design and implementation. Use the `/tlc-spec-driven` skill for feature planning and task decomposition.
@@ -148,17 +159,24 @@ This project follows **GitHub Flow** with rebase-based branch management:
 
 2. **Work locally with clean commits** — Follow Conventional Commits (enforced by commitlint). One commit per task.
 
-3. **Push feature branch**
+3. **Run all local checks before push**
+
+   ```bash
+   pnpm check        # Runs: typecheck + lint + test (MUST pass)
+   pnpm format       # Verify formatting is correct
+   ```
+
+4. **Push feature branch**
 
    ```bash
    git push origin feature/your-feature
    ```
 
-   **Automated:** GitHub Actions validates on push (`validate` workflow runs tests, lint, typecheck).
+   **Automated:** GitHub Actions re-runs validation on push (`validate.yml` — typecheck, lint, format, tests, Snyk SAST).
 
-4. **Create PR to `develop`** — After validation passes, create PR to `develop` for integration testing.
+5. **Create PR to `develop`** — After validation passes, create PR to `develop` for integration testing.
 
-5. **GitHub Actions handles promotion to `main`** — When PR merges to `develop`, `promote-to-main` workflow automatically creates PR from feature branch to `main`. After that PR merges, feature branch can be deleted.
+6. **GitHub Actions handles promotion to `main`** — When PR merges to `develop`, `promote-to-main` workflow automatically creates PR from feature branch to `main`. After that PR merges, feature branch can be deleted.
 
 ### Command Reference
 
