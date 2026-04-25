@@ -18,12 +18,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `pnpm dev` | Start Next.js dev server with Turbopack |
 | `pnpm build` | Production build (Next.js optimized) |
 | `pnpm start` | Serve production build locally |
+| `pnpm db:seed` | Populate database with deterministic faker data (pt-BR locale) |
+| `pnpm db:reset` | Drop all data and re-seed database |
 | `pnpm typecheck` | TypeScript strict check (noEmit) |
 | `pnpm lint` | Biome lint check |
 | `pnpm format` | Biome format (writes changes) |
 | `pnpm test` | Run all unit tests once |
 | `pnpm test:watch` | Run tests in watch mode |
-| `pnpm test:coverage` | Generate coverage report (v8) |
+| `pnpm test:coverage` | Generate coverage report (v8) with 80% threshold |
 | `pnpm check` | Full CI gate: typecheck + lint + test (must pass) |
 
 **Development workflow:** Run `pnpm check` before committing. Run `pnpm dev` for local development with hot reload.

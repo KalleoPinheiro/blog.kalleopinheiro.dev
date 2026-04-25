@@ -5,6 +5,7 @@ describe("env", () => {
     // Arrange
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
+    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
     vi.stubEnv("APP_VERSION", "1.0.0");
     vi.stubEnv("ENABLE_API_DOCS", "false");
 
@@ -21,6 +22,7 @@ describe("env", () => {
   it("applies defaults for optional variables", async () => {
     // Arrange
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "http://localhost:3000");
+    vi.stubEnv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db");
     delete process.env.APP_VERSION;
     delete process.env.ENABLE_API_DOCS;
 
@@ -36,7 +38,7 @@ describe("env", () => {
   it("throws when a required variable is missing", async () => {
     // Arrange
     vi.unstubAllEnvs();
-    delete process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.DATABASE_URL;
 
     // Act & Assert
     const { createEnv } = await import("@/utils/env");
