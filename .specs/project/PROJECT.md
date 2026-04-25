@@ -25,8 +25,8 @@ description: Vision, goals, stack, and scope for the personal technical blog
 - Framework: **Next.js** (latest stable, App Router)
 - Language: **TypeScript** (strict mode, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
 - Runtime: Node.js (LTS) on Vercel serverless
-- CMS: **Payload CMS** (self-hosted, Next.js-native integration) — introduced in M2
-- Database: PostgreSQL (Vercel Postgres / Neon) — introduced with Payload in M2
+- CMS: **Custom Headless CMS** (Prisma + schema-driven, Next.js API routes) — built in M1.5
+- Database: **Prisma ORM** with PostgreSQL (Vercel Postgres / Neon) — introduced in M1.5
 
 **UI:**
 
@@ -73,11 +73,23 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 - Swagger/OpenAPI setup for API route documentation
 - Base security headers via `next.config`
 - Project conventions and structure documented
+- CI/CD infrastructure (validate + promote-to-main workflows)
+
+**v1.5 (CMS Infrastructure — M1.5) includes:**
+
+- Custom headless CMS with schema-driven architecture
+- Prisma ORM with PostgreSQL database
+- Hooks registry system for extensibility
+- CMS schemas: posts, pages, authors, media, comments
+- CMS API routes (CRUD endpoints for all resources)
+- Admin UI (dashboard, list/create/edit pages for all resources)
+- Cache invalidation and revalidation system
+- CMS documentation (API reference, admin guide)
 
 **Explicitly out of scope for v1:**
 
-- Payload CMS integration (M2)
-- Any actual blog post rendering (M3)
+- Public blog post rendering (M2)
+- i18n / multi-language (M4)
 - i18n / multi-language (M4)
 - Authentication, comments, newsletter, search, analytics (Future)
 - Custom design system beyond shadcn defaults

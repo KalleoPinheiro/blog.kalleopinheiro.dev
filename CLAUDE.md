@@ -2,9 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ Next.js 16 — Breaking Changes
+
+**This is NOT the Next.js you know.** This project runs Next.js 16 with significant breaking changes from prior versions. APIs, conventions, and file structure differ from your training data. Before writing any code that touches routing, data-fetching, or server/client boundaries:
+
+1. **Read the docs:** Check `node_modules/next/dist/docs/` for current API signatures
+2. **Check deprecation notices:** Many pre-16 patterns are now errors or warnings
+3. **Assume Server Components by default:** Client-side code requires explicit `"use client"` boundary
+4. **Verify with typecheck:** Run `pnpm typecheck` after changes; strict TypeScript will catch API mismatches
+
 ## Commands
 
-| Command           | Purpose |
+| Command | Purpose |
 | --- | --- |
 | `pnpm dev` | Start Next.js dev server with Turbopack |
 | `pnpm build` | Production build (Next.js optimized) |
@@ -18,6 +27,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `pnpm check` | Full CI gate: typecheck + lint + test (must pass) |
 
 **Development workflow:** Run `pnpm check` before committing. Run `pnpm dev` for local development with hot reload.
+
+## Development Methodology
+
+This project uses **Spec-Driven Development (SDD)** — specifications drive design and implementation. Use the `/tlc-spec-driven` skill for feature planning and task decomposition.
+
+**SDD workflow:**
+
+1. **Specify** — Write clear requirements in spec files (`.specs/`)
+2. **Design** — Plan architecture based on specs
+3. **Tasks** — Break specs into atomic, verifiable tasks
+4. **Execute** — Implement with specs as acceptance criteria
+
+See `.specs/project/` for existing project specifications and requirements.
 
 ## Development Principles
 
@@ -126,35 +148,32 @@ This project follows **GitHub Flow** with rebase-based branch management:
 
 2. **Work locally with clean commits** — Follow Conventional Commits (enforced by commitlint). One commit per task.
 
-3. **Update branch before merging (rebase, don't merge)**
+3. **Push feature branch**
 
    ```bash
-   git fetch origin
-   git rebase origin/main
-   git push --force-with-lease origin feature/your-feature
+   git push origin feature/your-feature
    ```
 
-4. **Merge to `develop` for testing** — **Automated:** GitHub Actions validates on push (`validate` workflow runs tests, lint, typecheck).
+   **Automated:** GitHub Actions validates on push (`validate` workflow runs tests, lint, typecheck).
 
-5. **Merge to `main` when validated** — **Create PR to `develop`** — After validation passes, create PR to `develop` for integration testing.
+4. **Create PR to `develop`** — After validation passes, create PR to `develop` for integration testing.
 
-**GitHub Actions handles promotion to `main`** — When PR merges to `develop`, `promote-to-main` workflow automatically creates PR from feature branch to `main`. After that PR merges, feature branch can be deleted.
+5. **GitHub Actions handles promotion to `main`** — When PR merges to `develop`, `promote-to-main` workflow automatically creates PR from feature branch to `main`. After that PR merges, feature branch can be deleted.
 
 ### Command Reference
 
 | Task | Command |
 | --- | --- |
-| Create feature branch | `git checkout -b feature/description` |
-| Keep branch up-to-date | `git fetch origin && git rebase origin/develop` |
-| Squash commits before PR | `git rebase -i develop` |
+| Create feature branch | `git checkout main && git pull origin main && git checkout -b feature/description` |
+| Push feature branch | `git push origin feature/your-feature` |
+| Keep branch up-to-date | `git fetch origin && git rebase origin/main` |
+| Squash commits before PR | `git rebase -i main` |
 | Force-push after rebase | `git push --force-with-lease origin feature/your-feature` |
-| Rebase merge feature → develop | `git rebase develop feature/your-feature && git checkout develop && git merge feature/your-feature` |
-| Clean merged branches | `git branch -d feature/your-feature && git push origin --delete feature/your-feature` |
+| Delete merged branch | `git branch -d feature/your-feature && git push origin --delete feature/your-feature` |
 
 ### Guidelines
 
 - **Never force-push to `main` or `develop`** — only to feature branches
 - **One commit per logical task** — use rebase to clean up your history
 - **Rebase before every PR** — ensures linear history and resolves conflicts early
-- **Delete feature branches after merge** — keeps the repository clean
 - **Use descriptive branch names**: `feature/`, `fix/`, `docs/`, `chore/` prefixes (align with Conventional Commits)

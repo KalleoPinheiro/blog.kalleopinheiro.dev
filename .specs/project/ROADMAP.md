@@ -5,7 +5,7 @@ description: Milestones and features for the personal technical blog, evolving s
 
 # Roadmap
 
-**Current Milestone:** M2 — Headless CMS Integration
+**Current Milestone:** M2 — Content Rendering
 **Status:** Ready to begin (M1 + M1.5 ✅ complete)
 
 ---
@@ -77,76 +77,112 @@ description: Milestones and features for the personal technical blog, evolving s
 
 ---
 
-## M1.5 — CI/CD Infrastructure
+## M1.5 — Infrastructure & CMS
 
-**Goal:** GitHub Actions workflows that enforce the documented branching strategy: every `feature/**` push runs the full quality gate (typecheck, lint, format, tests, Snyk SAST) and blocks merges to `develop` until it passes; every merge of `feature/**` into `develop` automatically opens a PR to `main`.
-**Target:** Zero manual steps between a green `develop` merge and the `main` PR appearing.
-**Status:** ✅ COMPLETED (2026-04-24)
+**Goal:** Two phases: (1) CI/CD workflows enforcing the branching strategy with automated quality gates and promotion; (2) Custom headless CMS with schema-driven architecture, admin UI, and API layer.
+**Target:** Zero manual steps in the development workflow; content management fully operational with admin dashboard and CRUD endpoints.
+**Status:** ✅ COMPLETED (CI/CD: 2026-04-24; CMS: 2026-04-25)
 
 ### Features
+
+#### CI/CD Infrastructure
 
 **Feature-branch validation workflow** — ✅ DONE (CI-1, commit `caedf07`)
 
 - `validate.yml` triggers on `feature/**` push and PRs targeting `develop`
 - Runs: checkout → pnpm setup → typecheck → lint → format check → Vitest → Snyk SAST
 - Cancels in-progress runs on force-push (concurrency group by `github.ref`)
-- Auto-creates PR to `develop` for feature branches (idempotent via `existing-pr` check)
 - Tested across PRs #17-#25 with multiple feature branches
 
 **Automatic develop→main PR promotion** — ✅ DONE (CI-2, commit `caedf07`)
 
 - `promote-to-main.yml` triggers on merge of `feature/**` into `develop`
-- Guards on: `merged == true` AND `base == develop` AND `head.startsWith('feature/')`
 - Auto-creates `release:` PR with original PR credit and author attribution
 - Idempotent: checks for existing open PR to `main` before creation
-- Concurrency group by head.ref prevents race conditions
 - Tested in PRs #23-#25 with promotion flow validation
-
-**Developer alignment** — ✅ DONE (CI-3, CI-4)
-
-- Node 22 pinned in workflow `node-version: 22` (consistency enforced via CI)
-- `README.md` CI/CD section documents: required secrets (`SNYK_TOKEN`), status check name (`checks`), branch protection setup, workflow automation flow
-- All 10 pnpm scripts reused without modification
 
 **Branch protection enforcement** — ✅ DONE (CI-5, manual)
 
 - `develop` branch protection configured to require `checks` status check
-- Documented in README.md lines 92-98 for future contributor reproducibility
 - Tested: PR merge blocked on failing validation checks
 
+#### CMS Infrastructure
+
+**Hooks registry system** — ✅ DONE (commit `a09f285`)
+
+- `src/cms/hooks/registry.ts` — `HooksRegistry` class with error handling
+- Extensible hook system for pre/post operations across all resources
+- Global hooks registry singleton for cross-cutting concerns
+
+**CMS schemas & Prisma integration** — ✅ DONE (commit `a09f285`)
+
+- `src/cms/schemas/` — Zod-validated schemas for Post, Page, Author, Media, Comment
+- Prisma ORM with PostgreSQL support
+- Data normalization utility (`src/cms/utils/normalize.ts`) for `exactOptionalPropertyTypes` compatibility
+- Tests for all schemas with 100% coverage
+
+**CMS API routes (CRUD)** — ✅ DONE (commit `a09f285`)
+
+- `src/app/api/cms/{posts,pages,authors,media,comments}/` routes
+- GET (list), POST (create), PUT (update), DELETE endpoints
+- Prisma queries, validation, error handling
+- Hooks integration for cache invalidation
+
+**Admin UI** — ✅ DONE (commit `a09f285`)
+
+- `src/app/admin/` — Dashboard, navigation, layout with session-based access control
+- List, create, and edit pages for all resources
+- DataTable component with pagination-ready structure
+- FormBuilder with Zod validation and real-time error display
+- Status badges, rich-text editor placeholder, responsive UI
+
+**Cache invalidation & revalidation** — ✅ DONE (commit `a09f285`)
+
+- Hooks fire on POST/PUT/DELETE API calls
+- Cache tags per resource (posts, pages, authors, media, comments)
+- `revalidateTag()` calls in hook handlers for On-Demand ISR
+- Tested with real API routes and cache behavior
+
+**Documentation** — ✅ DONE (commit `a09f285`)
+
+- `docs/cms-api.md` — API reference (endpoints, auth, examples, error codes)
+- `docs/cms-admin-guide.md` — Admin UI walkthrough and troubleshooting
+- `README.md` updated with CMS section and links
+
 ---
 
-## M2 — Headless CMS Integration
+## M2 — Content Rendering
 
-**Goal:** Payload CMS running inside the Next.js app, backed by PostgreSQL, with content collections for posts, authors, and taxonomies. Admin UI accessible and secured.
-
-### Features
-
-**Payload CMS install** — PLANNED
-**Database provisioning (Neon / Vercel Postgres)** — PLANNED
-**Collections: Posts, Authors, Tags, Categories, Media** — PLANNED
-**Admin access control** — PLANNED
-**Media storage (Vercel Blob or S3)** — PLANNED
-**Local dev seed data** — PLANNED
-
----
-
-## M3 — Content Rendering
-
-**Goal:** Readers can discover and read posts. Blog index, post detail, tag/category pages, and syntax-highlighted code blocks.
+**Goal:** Readers can discover and read posts. Blog index, post detail pages, and author pages, pulling content from the CMS via API.
 
 ### Features
 
 **Post list / blog index** — PLANNED
 **Post detail page** — PLANNED
-**Rich-text / MDX rendering with syntax highlighting** — PLANNED
-**Tag and category archive pages** — PLANNED
-**Reading time, table of contents, share links** — PLANNED
-**Populated RSS feed + sitemap** — PLANNED
+**Author profile page** — PLANNED
+**Markdown / rich-text rendering with syntax highlighting** — PLANNED
+**Reading time, table of contents** — PLANNED
+**Populated RSS feed + sitemap with live data** — PLANNED
+**Dynamic sitemap.xml and robots.txt** — PLANNED
 
 ---
 
-## M4 — Internationalization
+## M3 — Advanced Content Features
+
+**Goal:** Enhanced reader experience with archives, search, and related-posts recommendations.
+
+### Features
+
+**Tag / category archive pages** — PLANNED
+**Full-text search (Algolia, Meilisearch, or Postgres-backed)** — PLANNED
+**Related posts sidebar** — PLANNED
+**Comment system (Giscus / GitHub Discussions)** — PLANNED
+**OG image auto-generation per post** — PLANNED
+**Draft preview URLs for unpublished posts** — PLANNED
+
+---
+
+## M4 — Internationalization (i18n)
 
 **Goal:** Bilingual site (pt-BR default, en-US added). Content authored per locale, URL routing respects locale, SEO hreflang tags in place.
 
@@ -154,7 +190,7 @@ description: Milestones and features for the personal technical blog, evolving s
 
 **i18n routing (`/pt`, `/en`)** — PLANNED
 **Locale-aware metadata and hreflang tags** — PLANNED
-**Payload collections with localized fields** — PLANNED
+**CMS locale fields for Posts, Pages, Authors** — PLANNED
 **Language switcher UI** — PLANNED
 **Localized sitemap and RSS** — PLANNED
 
@@ -162,14 +198,12 @@ description: Milestones and features for the personal technical blog, evolving s
 
 ## Future Considerations
 
-- Full-text search (Algolia, Meilisearch, or Postgres-backed)
 - Analytics (Vercel Analytics or self-hosted Plausible)
-- Newsletter (Resend + subscribe form)
-- Comments (Giscus via GitHub Discussions)
+- Newsletter subscription (Resend + subscribe form)
 - Dark mode toggle with system preference
-- Related-posts recommendations
-- OG image auto-generation per post
-- Author pages
-- Series / multi-part articles
-- Draft preview URLs for unpublished posts
+- Series / multi-part articles (multi-part posts)
 - Web vitals dashboard and performance regression CI
+- Email notifications on new posts
+- Social sharing optimization (share buttons, preview cards)
+- Advanced cache strategies per content type
+- CDN edge caching tuning for SEO and performance

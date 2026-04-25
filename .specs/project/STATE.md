@@ -5,8 +5,8 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 
 # State
 
-**Last Updated:** 2026-04-24
-**Current Work:** M1.5 — CI/CD Infrastructure (✅ COMPLETED)
+**Last Updated:** 2026-04-25
+**Current Work:** M1.5 — CMS Infrastructure (✅ COMPLETED)
 
 ---
 
@@ -81,6 +81,13 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 **Reason:** User requested to skip Vercel integration "at this moment" — keeps the M1 cycle faster and unblocks the coding work that doesn't depend on deploy.
 **Trade-off:** FND-15's acceptance criteria (preview URLs, production deploy) remain unverified until the follow-up. Any hosting-specific issue (cold starts, header propagation) will surface later.
 **Impact:** `tasks.md` T25 is marked DEFERRED. The rest of M1 proceeds normally. When picked up, T25 is a standalone task plus possible additions for Vercel env vars and build settings.
+
+### AD-011: Custom Headless CMS vs Payload CMS (2026-04-25)
+
+**Decision:** Build a custom headless CMS architecture using Prisma ORM + schema-driven design + Next.js API routes instead of integrating Payload CMS.
+**Reason:** Custom CMS gives full control over schema, admin UI, and extensibility (hooks registry); Prisma integrates natively with Next.js strict types and Zod validation; can ship admin UI and API routes without third-party overhead or operational complexity. Payload's M2 deferral provided time to evaluate the custom approach — it proved simpler for this project's needs.
+**Trade-off:** Build and maintain CMS infra ourselves (schemas, admin UI, validation, revalidation logic); Payload would offer more out-of-the-box features (media manager, versioning, workflows) but at the cost of bundle size and complexity.
+**Impact:** CMS infrastructure (schemas, hooks, API routes, admin) delivered as M1.5. M2 shifts focus to public blog rendering (list pages, post display). i18n and advanced features (comments, search) defer to M4+.
 
 ---
 
