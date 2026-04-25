@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { PostCard } from "./post-card";
 
 interface Post {

@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   CreatePostSchema,
-  PostSchema,
   UpdatePostSchema,
 } from "@/cms/schemas/post";
 
@@ -43,6 +42,7 @@ describe("PostSchema", () => {
         excerpt: "excerpt",
         authorId: "cljp1234567890abcdef12345",
         status: "published",
+        publishedAt: null,
       });
 
       expect(sut.success).toBe(true);
