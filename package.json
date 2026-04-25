@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "DATABASE_URL=${DATABASE_URL:-postgresql://dummy:dummy@localhost:5432/dummy} prisma generate",
+    "postinstall": "DATABASE_URL=${DATABASE_URL:-postgresql://dummy:dummy@localhost:5432/dummy} prisma generate && husky install",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "check": "tsc --noEmit && biome check && vitest run"
+    "check": "tsc --noEmit && biome check && vitest run",
+    "prepare": "husky"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -45,6 +46,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.5",
     "babel-plugin-react-compiler": "1.0.0",
+    "husky": "^9.1.7",
     "jsdom": "^29.0.2",
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
