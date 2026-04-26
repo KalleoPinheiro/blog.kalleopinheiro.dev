@@ -14,7 +14,10 @@
 ### Environment
 
 - **DATABASE_URL**: Added to `src/utils/env.ts` as `z.string().url()`, validated at startup.
-- **Fallback**: Prisma `postinstall` hook continues using `env()` helper for build-time generation.
+- **Prisma generator**: `provider = "prisma-client"` (Prisma 7) with `output = "../src/generated/prisma"`. Client is gitignored and must be regenerated via `pnpm db:generate` after schema changes.
+- **Driver adapter**: `PrismaPg` from `@prisma/adapter-pg` + `pg` driver. `src/lib/db.ts` instantiates `new PrismaClient({ adapter: new PrismaPg({ connectionString }) })`. Imports come from `@/generated/prisma/client`.
+- **`prisma.config.ts`**: Reads `.env.local` manually (Prisma CLI does not use Next.js env loading), declares `schema` and `migrations.path` explicitly, omits the `datasource` block when `DATABASE_URL` is absent so `prisma generate` works without a running database.
+- **`pnpm db:generate`**: Canonical command to regenerate the client. No `postinstall` auto-generate.
 
 ## API Layer (Unchanged)
 
