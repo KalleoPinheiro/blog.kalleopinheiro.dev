@@ -1,9 +1,8 @@
-import { Prisma } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-
 import { UpdatePostSchema } from "@/cms/schemas/post";
 import { normalizeData } from "@/cms/utils/normalize";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 
 function isP2025(error: unknown): boolean {
