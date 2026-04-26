@@ -1,9 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-
 import { UpdatePostSchema } from "@/cms/schemas/post";
 import { normalizeData } from "@/cms/utils/normalize";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+
+function isP2025(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2025"
+  );
+}
 
 type Params = Promise<{ id: string }>;
 
@@ -50,6 +57,9 @@ export async function PUT(req: NextRequest, { params }: { params: Params }) {
         { status: 400 },
       );
     }
+    if (isP2025(error)) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
     console.error("PUT /api/cms/posts/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to update post" },
@@ -69,8 +79,11 @@ export async function DELETE(
       where: { id },
     });
 
-    return NextResponse.json(null, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
+    if (isP2025(error)) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
     console.error("DELETE /api/cms/posts/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to delete post" },

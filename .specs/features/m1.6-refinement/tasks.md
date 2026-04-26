@@ -39,12 +39,17 @@
 
 18. `docs: update CLAUDE.md + STATE.md` — Add seed workflow, mark milestone complete
 
+## Prisma 7 Installation Revision (✅ 2026-04-26)
+
+19. ✓ `chore(prisma): migrate to prisma-client generator + PrismaPg adapter` — Switch `schema.prisma` generator to `provider = "prisma-client"` with `output = "../src/generated/prisma"`; wire `PrismaPg` adapter in `src/lib/db.ts`; add `pg` + `@types/pg`; move `@prisma/client` to `dependencies`; add `pnpm db:generate` script; fix `prisma.config.ts` to read `.env.local` and omit datasource when `DATABASE_URL` absent.
+
 ## Verification
 
 ```bash
 pnpm install
-pnpm prisma migrate dev
-pnpm db:seed
+pnpm db:generate          # regenerate Prisma client to src/generated/prisma/
+pnpm exec prisma migrate deploy  # apply migrations
+pnpm db:seed              # populate database
 pnpm check
 pnpm dev  # smoke /blog, /posts/[slug], /admin/*
 ```

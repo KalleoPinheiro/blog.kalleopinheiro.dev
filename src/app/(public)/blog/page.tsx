@@ -3,6 +3,8 @@ import { PostList } from "@/components/blog/post-list";
 import { prisma } from "@/lib/db";
 import { buildPageMetadata } from "@/utils/metadata";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = buildPageMetadata({
   title: "Blog",
   description: "Latest articles and updates",
