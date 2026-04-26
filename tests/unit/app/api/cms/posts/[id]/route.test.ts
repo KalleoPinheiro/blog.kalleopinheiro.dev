@@ -1,7 +1,7 @@
-import { Prisma } from "@prisma/client";
 import type { NextRequest } from "next/server";
 import { describe, expect, it, vi } from "vitest";
 import { DELETE, GET, PUT } from "@/app/api/cms/posts/[id]/route";
+import { Prisma } from "@/generated/prisma/client";
 
 vi.mock("@/lib/db", () => ({
   prisma: {
