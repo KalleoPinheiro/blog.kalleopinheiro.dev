@@ -8,7 +8,7 @@ export function AdminShell({ children }: AdminShellProps) {
   return (
     <div className="flex h-screen">
       <AdminSidebar />
-      <main className="flex-1 overflow-auto p-8">{children}</main>
+      <main className="flex-1 overflow-auto p-8 bg-background">{children}</main>
     </div>
   );
 }

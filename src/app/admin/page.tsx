@@ -1,24 +1,35 @@
-export default function AdminDashboard() {
+import { prisma } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminDashboard() {
+  const [posts, pages, authors, comments] = await Promise.all([
+    prisma.post.count(),
+    prisma.page.count(),
+    prisma.author.count(),
+    prisma.comment.count(),
+  ]);
+
+  const stats = [
+    { label: "Posts", value: posts },
+    { label: "Pages", value: pages },
+    { label: "Authors", value: authors },
+    { label: "Comments", value: comments },
+  ];
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+    <div>
+      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded shadow">
-          <h3 className="text-gray-600 text-sm">Posts</h3>
-          <p className="text-2xl font-bold">0</p>
-        </div>
-        <div className="bg-white p-6 rounded shadow">
-          <h3 className="text-gray-600 text-sm">Pages</h3>
-          <p className="text-2xl font-bold">0</p>
-        </div>
-        <div className="bg-white p-6 rounded shadow">
-          <h3 className="text-gray-600 text-sm">Authors</h3>
-          <p className="text-2xl font-bold">0</p>
-        </div>
-        <div className="bg-white p-6 rounded shadow">
-          <h3 className="text-gray-600 text-sm">Comments</h3>
-          <p className="text-2xl font-bold">0</p>
-        </div>
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="bg-card border border-border p-6 rounded-lg"
+          >
+            <h3 className="text-muted-foreground text-sm">{stat.label}</h3>
+            <p className="text-3xl font-bold mt-1">{stat.value}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
