@@ -5,7 +5,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 
 # State
 
-**Last Updated:** 2026-04-25
+**Last Updated:** 2026-04-26
 **Current Work:** M1.6 — Refinement (✅ COMPLETED)
 
 ---
@@ -81,6 +81,18 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 **Reason:** User requested to skip Vercel integration "at this moment" — keeps the M1 cycle faster and unblocks the coding work that doesn't depend on deploy.
 **Trade-off:** FND-15's acceptance criteria (preview URLs, production deploy) remain unverified until the follow-up. Any hosting-specific issue (cold starts, header propagation) will surface later.
 **Impact:** `tasks.md` T25 is marked DEFERRED. The rest of M1 proceeds normally. When picked up, T25 is a standalone task plus possible additions for Vercel env vars and build settings.
+
+### AD-012: Prisma 7 driver adapter via `@prisma/adapter-pg` (2026-04-26)
+
+**Decision:** Use the new Prisma 7 `prisma-client` generator with the `PrismaPg` driver adapter from `@prisma/adapter-pg` + `pg`, generating the client to `src/generated/prisma/`.
+**Reason:** Prisma 7 deprecates `prisma-client-js` in favour of `prisma-client`, which requires an explicit output path and a native driver adapter. The adapter-based approach removes the query engine binary (reducing bundle size) and uses `pg` directly, which is the recommended pattern for PostgreSQL on Node.js. Generating to `src/generated/prisma/` makes the client a first-class source artifact importable via the `@/` alias.
+**Trade-off:** The generated directory must be excluded from git (added to `.gitignore`) and regenerated after schema changes (`pnpm db:generate`). CI pipelines that run `prisma migrate` or tests importing Prisma types must ensure `DATABASE_URL` is available _or_ call `pnpm db:generate` before running.
+**Impact:**
+- `src/lib/db.ts` imports `PrismaClient` from `@/generated/prisma/client` and instantiates with `new PrismaPg({ connectionString })`.
+- `@prisma/client` moved to `dependencies`; `pg` added to `dependencies`; `@types/pg` added to `devDependencies`.
+- `prisma.config.ts` reads `.env.local` manually (Next.js env loading is not available for the Prisma CLI), declares `schema` and `migrations.path` explicitly, and omits the datasource block when `DATABASE_URL` is absent (safe for `prisma generate` without a DB).
+- `pnpm db:generate` is the canonical command to regenerate the client after schema changes.
+- `postinstall` script removed; generate is now explicit, not implicit on install.
 
 ### AD-011: Custom Headless CMS vs Payload CMS (2026-04-25)
 
@@ -162,9 +174,12 @@ _None yet._
 | T16  | Admin sidebar + shell layout           | ✅ Done   | 2026-04-25 |
 | T18  | Docs: CLAUDE.md + STATE.md updates     | ✅ Done   | 2026-04-25 |
 
+| T19  | Prisma 7 installation revision (AD-012)| ✅ Done   | 2026-04-26 |
+
 **Seed Data Counts:** 8 media, 3 authors, 12 posts (mix draft/published), 4 pages, 24 comments.
 **Coverage Gate:** 80% lines/functions/branches/statements on `src/lib/**` + `src/app/api/**`.
 **Blog Features:** Published-only list, RSC rendering, article OG + JSON-LD schema, slug-based routing.
+**Prisma Setup:** `prisma-client` generator → `src/generated/prisma/`; `PrismaPg` adapter; `pnpm db:generate` para regenerar o cliente.
 
 ---
 
