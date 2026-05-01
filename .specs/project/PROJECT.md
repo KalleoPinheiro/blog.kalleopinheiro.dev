@@ -73,7 +73,7 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 - Swagger/OpenAPI setup for API route documentation
 - Base security headers via `next.config`
 - Project conventions and structure documented
-- CI/CD infrastructure (validate + promote-to-main workflows)
+- CI/CD infrastructure (GitHub Flow: feature → main via PR with validate workflow)
 
 **v1.5 (CMS Infrastructure — M1.5) includes:**
 
