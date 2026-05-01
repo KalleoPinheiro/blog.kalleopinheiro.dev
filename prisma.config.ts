@@ -18,11 +18,8 @@ try {
   // .env.local not present (CI/prod uses real env vars)
 }
 
-export default defineConfig({
-  datasource: {
-    url: process.env.DATABASE_URL || env("DATABASE_URL"),
-  },
-  ...(process.env.DATABASE_URL
+export default defineConfig(
+  process.env.DATABASE_URL
     ? { datasource: { url: process.env.DATABASE_URL } }
-    : {}),
-});
+    : {},
+);
