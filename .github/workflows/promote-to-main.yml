@@ -42,23 +42,23 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
-      - name: rebase on develop
+      - name: rebase on main
         if: steps.existing-pr.outputs.count == '0'
         run: |
-          git fetch origin develop
-          git rebase origin/develop || {
+          git fetch origin main
+          git rebase origin/main || {
             git rebase --abort
             echo "❌ Rebase failed: conflicts detected on ${{ github.event.pull_request.head.ref }}"
             echo "Manual fix required:"
-            echo "  git fetch origin develop"
-            echo "  git rebase origin/develop"
+            echo "  git fetch origin main"
+            echo "  git rebase origin/main"
             echo "  # resolve conflicts"
             echo "  git rebase --continue"
             echo "  git push --force-with-lease"
             exit 1
           }
           git push --force-with-lease origin ${{ github.event.pull_request.head.ref }}
-          echo "✅ Rebased on develop and pushed"
+          echo "✅ Rebased on main and pushed"
 
       - name: create promotion pr to main
         if: steps.existing-pr.outputs.count == '0'
