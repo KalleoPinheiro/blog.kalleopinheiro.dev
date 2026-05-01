@@ -26,4 +26,4 @@ if echo "$branch" | grep -q "^feature/"; then
 fi
 
 # Continue with validation checks
-pnpm check
+pnpm check && pnpm test

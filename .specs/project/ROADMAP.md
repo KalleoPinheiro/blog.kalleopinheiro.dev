@@ -81,7 +81,7 @@ description: Milestones and features for the personal technical blog, evolving s
 
 **Goal:** Two phases: (1) CI/CD workflows enforcing the branching strategy with automated quality gates and promotion; (2) Custom headless CMS with schema-driven architecture, admin UI, and API layer.
 **Target:** Zero manual steps in the development workflow; content management fully operational with admin dashboard and CRUD endpoints.
-**Status:** ✅ COMPLETED (CI/CD: 2026-04-24; CMS: 2026-04-25)
+**Status:** ✅ COMPLETED (CI/CD: 2026-04-24; CMS: 2026-04-25; Database: 2026-05-01)
 
 ### Features
 
@@ -148,6 +148,36 @@ description: Milestones and features for the personal technical blog, evolving s
 - `docs/cms-api.md` — API reference (endpoints, auth, examples, error codes)
 - `docs/cms-admin-guide.md` — Admin UI walkthrough and troubleshooting
 - `README.md` updated with CMS section and links
+
+#### Database Layer
+
+**Prisma 7 migration** — ✅ DONE (commits 2026-05-01)
+
+- Migrated from `prisma-client-js` to `prisma-client` generator with custom output (`src/generated/prisma`)
+- Lazy-init Proxy pattern for PrismaClient to avoid build-time instantiation
+- `prisma generate` wired into `postinstall`, `prebuild`, and CI with dummy env vars during build
+- Full TypeScript validation + db singleton tests
+
+**Supabase pgBouncer integration** — ✅ DONE
+
+- DATABASE_URL (pooled, port 6543) for runtime connections
+- DIRECT_URL (direct, port 5432) for Prisma migrations
+- prisma.config.ts configured with env validation
+- .env.example documented with Supabase connection patterns
+
+**Seeder infrastructure** — ✅ DONE
+
+- `pnpm db:seed` script using tsx + faker for local testing
+- `pnpm db:migrate`, `pnpm db:studio` commands wired
+- Package.json prisma.seed configured for `prisma db seed`
+
+**Build optimization** — ✅ DONE
+
+- @prisma/client marked as external server package in Next.js config
+- tsconfig excludes prisma/ to prevent seed.ts type check during build
+- CI deterministic: `pnpm build` and `pnpm test` pass with dummy DATABASE_URL/DIRECT_URL
+
+**Next step:** Set Vercel env scopes for DATABASE_URL (pooled) + DIRECT_URL (direct) before deploying to production.
 
 ---
 
