@@ -5,16 +5,16 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 
 # Only rebase feature/* branches
 if echo "$branch" | grep -q "^feature/"; then
-  echo "🔄 Rebasing $branch on develop..."
-  git fetch origin develop
+  echo "🔄 Rebasing $branch on main..."
+  git fetch origin main
 
-  if ! git rebase origin/develop; then
+  if ! git rebase origin/main; then
     git rebase --abort
     echo "❌ Rebase failed: conflicts detected on $branch"
     echo ""
     echo "Manual fix required:"
-    echo "  1. git fetch origin develop"
-    echo "  2. git rebase origin/develop"
+    echo "  1. git fetch origin main"
+    echo "  2. git rebase origin/main"
     echo "  3. Resolve conflicts in your editor"
     echo "  4. git add ."
     echo "  5. git rebase --continue"
@@ -22,8 +22,8 @@ if echo "$branch" | grep -q "^feature/"; then
     exit 1
   fi
 
-  echo "✅ Rebased on develop successfully"
+  echo "✅ Rebased on main successfully"
 fi
 
 # Continue with validation checks
-pnpm check
+pnpm check && pnpm test
