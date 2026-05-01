@@ -47,3 +47,6 @@ next-env.d.ts
 
 # ia
 .claude
+
+# prisma generated client
+/src/generated
