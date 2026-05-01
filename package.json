@@ -20,11 +20,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "check": "DATABASE_URL=${DATABASE_URL:-postgresql://dummy:dummy@localhost:5432/dummy} DIRECT_URL=${DIRECT_URL:-postgresql://dummy:dummy@localhost:5432/dummy} prisma generate && tsc --noEmit && biome check && vitest run",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio",
+    "check": "DATABASE_URL=${DATABASE_URL:-postgresql://dummy:dummy@localhost:5432/dummy} prisma generate && tsc --noEmit && biome check && vitest run",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "prisma migrate reset --force && pnpm db:seed",
+    "postinstall": "prisma generate",
     "prepare": "husky"
   },
   "dependencies": {
