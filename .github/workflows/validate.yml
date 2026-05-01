@@ -6,7 +6,7 @@ on:
       - "feature/**"
   pull_request:
     branches:
-      - develop
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -34,8 +34,11 @@ jobs:
       - name: install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: generate prisma client
-        run: pnpm db:generate
+      - name: prisma generate
+        run: pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
+          DIRECT_URL: postgresql://dummy:dummy@localhost:5432/dummy
 
       - name: typecheck
         run: pnpm typecheck

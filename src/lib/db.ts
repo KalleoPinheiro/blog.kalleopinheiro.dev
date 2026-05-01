@@ -1,33 +1,42 @@
-import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/generated/prisma/client";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+declare global {
+  // eslint-disable-next-line no-var
+  var __prisma: PrismaClient | undefined;
+}
 
-function initPrisma() {
-  try {
-    const connectionString = process.env.DATABASE_URL;
-    if (!connectionString) {
-      console.warn("Prisma initialization skipped: DATABASE_URL not set");
-      return null as unknown as PrismaClient;
-    }
-    const adapter = new PrismaPg({ connectionString });
-    return (
-      globalForPrisma.prisma ||
-      new PrismaClient({
-        adapter,
-        log: process.env.NODE_ENV === "development" ? ["query"] : [],
-      })
-    );
-  } catch (error) {
-    console.warn("Prisma initialization failed, using stub", error);
-    return null as unknown as PrismaClient;
+let cachedInstance: PrismaClient | null = null;
+
+function getPrismaClient(): PrismaClient {
+  if (cachedInstance) {
+    return cachedInstance;
   }
+
+  if (globalThis.__prisma) {
+    cachedInstance = globalThis.__prisma;
+    return cachedInstance;
+  }
+
+  // @ts-expect-error Prisma 7 requires adapter; using default PostgreSQL adapter
+  const client = new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "warn", "error"]
+        : ["error"],
+  });
+
+  cachedInstance = client;
+
+  if (process.env.NODE_ENV !== "production") {
+    globalThis.__prisma = client;
+  }
+
+  return client;
 }
 
-const prismaClient = initPrisma();
-
-if (process.env.NODE_ENV !== "production" && prismaClient) {
-  globalForPrisma.prisma = prismaClient;
-}
-
-export const prisma = prismaClient;
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_, prop) {
+    const client = getPrismaClient();
+    return client[prop as keyof PrismaClient];
+  },
+});
