@@ -1,2 +1,29 @@
-# Run full validation gate before push
+#!/bin/sh
+
+# Get current branch
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Only rebase feature/* branches
+if echo "$branch" | grep -q "^feature/"; then
+  echo "🔄 Rebasing $branch on develop..."
+  git fetch origin develop
+
+  if ! git rebase origin/develop; then
+    git rebase --abort
+    echo "❌ Rebase failed: conflicts detected on $branch"
+    echo ""
+    echo "Manual fix required:"
+    echo "  1. git fetch origin develop"
+    echo "  2. git rebase origin/develop"
+    echo "  3. Resolve conflicts in your editor"
+    echo "  4. git add ."
+    echo "  5. git rebase --continue"
+    echo "  6. git push origin $branch"
+    exit 1
+  fi
+
+  echo "✅ Rebased on develop successfully"
+fi
+
+# Continue with validation checks
 pnpm check
