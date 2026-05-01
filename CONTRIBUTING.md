@@ -29,7 +29,7 @@ pnpm dev
    # Create PR on GitHub, target: develop branch
    ```
 
-4. After merge to `develop`, promotion workflow auto-creates PR to `main`.
+4. After merge to `develop`, `develop` is automatically promoted to `main` via auto-created PR.
 
 ### Pre-Commit Checks
 
@@ -72,9 +72,10 @@ Follow these steps, then retry `git push`. The hook will rebase again and allow 
 - Typecheck, lint, format check, tests, Snyk SAST
 - Blocks merge if checks fail
 
-**promote-to-main.yml** — Runs on merge to `develop`
-- Auto-rebase feature branch on latest `develop`
-- Creates PR to `main` if rebase succeeds
+**promote-to-main.yml** — Runs on push to `develop`
+- Auto-rebases `develop` on latest `main`
+- Creates PR `develop` → `main` if rebase succeeds
+- Merge the PR to promote to production
 
 ### Auto-Rebase in Promotion Workflow
 

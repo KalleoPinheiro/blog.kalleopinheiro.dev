@@ -1,23 +1,13 @@
 name: promote-to-main
 
 on:
-  pull_request:
+  push:
     branches:
       - develop
-    types:
-      - closed
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
-  cancel-in-progress: false
 
 jobs:
   promote:
     runs-on: ubuntu-latest
-    if: |
-      github.event.pull_request.merged == true &&
-      startsWith(github.event.pull_request.head.ref, 'feature/')
-
     permissions:
       contents: write
       pull-requests: write
@@ -27,23 +17,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: develop
 
       - name: configure git
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: checkout feature branch
-        run: |
-          git fetch origin ${{ github.event.pull_request.head.ref }}
-          git checkout ${{ github.event.pull_request.head.ref }}
-
       - name: check for existing pr to main
         id: existing-pr
         run: |
           existing=$(gh pr list \
             --repo "${{ github.repository }}" \
-            --head "${{ github.event.pull_request.head.ref }}" \
+            --head "develop" \
             --base main \
             --state open \
             --json number \
@@ -52,23 +38,23 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
-      - name: rebase on main
+      - name: rebase develop on main
         if: steps.existing-pr.outputs.count == '0'
         run: |
           git fetch origin main
           git rebase origin/main || {
             git rebase --abort
-            echo "❌ Rebase failed: conflicts detected on ${{ github.event.pull_request.head.ref }}"
+            echo "❌ Rebase failed: develop has conflicts with main"
             echo "Manual fix required:"
             echo "  git fetch origin main"
             echo "  git rebase origin/main"
             echo "  # resolve conflicts"
             echo "  git rebase --continue"
-            echo "  git push --force-with-lease"
+            echo "  git push --force-with-lease origin develop"
             exit 1
           }
-          git push --force-with-lease origin ${{ github.event.pull_request.head.ref }}
-          echo "✅ Rebased on main and pushed"
+          git push --force-with-lease origin develop
+          echo "✅ Rebased develop on main and pushed"
 
       - name: create promotion pr to main
         if: steps.existing-pr.outputs.count == '0'
@@ -76,8 +62,8 @@ jobs:
           gh pr create \
             --repo "${{ github.repository }}" \
             --base main \
-            --head "${{ github.event.pull_request.head.ref }}" \
-            --title "release: ${{ github.event.pull_request.title }}" \
-            --body "Promotion of ${{ github.event.pull_request.html_url }} (merged by @${{ github.event.pull_request.merged_by.login }})."
+            --head "develop" \
+            --title "release: merge develop to main" \
+            --body "Promotion of develop branch to main for production release."
         env:
           GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
