@@ -61,6 +61,7 @@ Manual fix required:
 ```
 
 Follow these steps, then retry `git push`. The hook will rebase again and allow the push if conflicts are resolved.
+
 ---
 
 ## CI/CD
