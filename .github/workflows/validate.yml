@@ -6,7 +6,7 @@ on:
       - "feature/**"
   pull_request:
     branches:
-      - develop
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -36,6 +36,8 @@ jobs:
 
       - name: generate prisma client
         run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
 
       - name: typecheck
         run: pnpm typecheck
@@ -54,7 +56,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-  open-pr-to-develop:
+  open-pr-to-main:
     needs: checks
     if: github.event_name == 'push' && startsWith(github.ref_name, 'feature/')
     runs-on: ubuntu-latest
@@ -67,13 +69,13 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: check for existing pr to develop
+      - name: check for existing pr to main
         id: existing-pr
         run: |
           existing=$(gh pr list \
             --repo "${{ github.repository }}" \
             --head "${{ github.ref_name }}" \
-            --base develop \
+            --base main \
             --state open \
             --json number \
             --jq 'length')
@@ -81,12 +83,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
-      - name: create pr to develop
+      - name: create pr to main
         if: steps.existing-pr.outputs.count == '0'
         run: |
           gh pr create \
             --repo "${{ github.repository }}" \
-            --base develop \
+            --base main \
             --head "${{ github.ref_name }}" \
             --title "feat: ${{ github.ref_name }}" \
             --body "Automated PR opened by validate workflow for branch \`${{ github.ref_name }}\`."
