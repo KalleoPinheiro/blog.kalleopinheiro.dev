@@ -61,7 +61,6 @@ Manual fix required:
 ```
 
 Follow these steps, then retry `git push`. The hook will rebase again and allow the push if conflicts are resolved.
-
 ---
 
 ## CI/CD
@@ -76,6 +75,26 @@ Follow these steps, then retry `git push`. The hook will rebase again and allow 
 - Auto-rebase feature branch on latest `develop`
 - Creates PR to `main` if rebase succeeds
 
+### Auto-Rebase in Promotion Workflow
+
+When your feature branch merges to `develop`, the promotion workflow automatically rebases your branch on the latest `develop` before creating a PR to `main`. This prevents conflicts on `main`.
+
+#### If rebase fails
+
+Rebase conflicts occur when `develop` has diverged (e.g., another feature merged first). The workflow will fail and log diagnostic steps.
+
+Fix locally:
+
+```bash
+git fetch origin develop
+git rebase origin/develop
+# resolve conflicts in your editor
+git add .
+git rebase --continue
+git push --force-with-lease
+```
+
+The workflow will retry automatically on your next commit, or you can manually re-trigger it on GitHub.
 ---
 
 ## Commit Message Format
