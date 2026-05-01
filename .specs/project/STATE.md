@@ -6,7 +6,7 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 # State
 
 **Last Updated:** 2026-05-01
-**Current Work:** M1.5 — CMS Infrastructure + Database Layer (✅ COMPLETED)
+**Current Work:** M1.5 — CI/CD GitHub Flow migration + Docker/Vercel build fix (feature/docker-vercel-fix)
 
 ---
 
@@ -93,6 +93,30 @@ description: Persistent memory for architectural decisions, blockers, lessons, a
 - `prisma.config.ts` reads `.env.local` manually (Next.js env loading is not available for the Prisma CLI), declares `schema` and `migrations.path` explicitly, and omits the datasource block when `DATABASE_URL` is absent (safe for `prisma generate` without a DB).
 - `pnpm db:generate` is the canonical command to regenerate the client after schema changes.
 - `postinstall` script removed; generate is now explicit, not implicit on install.
+
+### AD-013: GitHub Flow — feature branches merge directly to main (2026-05-01)
+
+**Decision:** Abandon three-branch strategy (feature → develop → main). Use GitHub Flow: feature branches merge directly to `main` via PR. The `develop` branch is retired.
+**Reason:** Three-branch flow created cascading merge conflicts at every stage (feature→develop, promote develop→main). GitHub Flow is simpler for a solo maintainer: one integration point, one target, no promotion automation needed.
+**Trade-off:** No pre-production integration buffer (`develop`). All validation must pass on the feature PR itself before merge.
+**Impact:**
+- `validate.yml` triggers on push to `feature/**` and PRs to `main`; auto-creates PR to `main` after checks pass.
+- `promote-to-main.yml` removed entirely.
+- Pre-push hook rebases feature branches on `main` (not develop) before push.
+- Branch protection: `main` requires passing checks + review before merge.
+- Feature branch naming: `feature/description` from `main`.
+
+### AD-014: Docker local environment + Vercel build pipeline fix (2026-05-01)
+
+**Decision:** Add Dockerfile (multi-stage production) + Dockerfile.dev + docker-compose.yml app service for local dev. Fix Vercel `Module not found` via `postinstall`/`prebuild` scripts.
+**Reason:** `src/generated/prisma/` is gitignored; Vercel never had the Prisma client. Need `prisma generate` to run automatically before `next build`. Docker provides reproducible local environment with startup chain (generate → migrate → seed → dev).
+**Trade-off:** `postinstall` runs prisma generate on every `pnpm install`, adding ~1s to install time. Named Docker volumes for `node_modules` and `src/generated` prevent host/container path conflicts.
+**Impact:**
+- `postinstall`: `DATABASE_URL=...dummy... prisma generate && husky install`
+- `prebuild`: `DATABASE_URL=...dummy... DIRECT_URL=...dummy... prisma generate`
+- docker-compose: `app` service depends on postgres healthcheck, runs startup chain
+- `DIRECT_URL` env var added for Supabase direct connection (Prisma migrations bypass pgBouncer)
+- `prisma.config.ts` passes `directUrl` when `DIRECT_URL` is set
 
 ### AD-011: Custom Headless CMS vs Payload CMS (2026-04-25)
 
@@ -189,13 +213,125 @@ _None yet — captured in ROADMAP "Future Considerations" for now._
 
 ## Todos
 
-- [ ] Before M2: Set Vercel env scopes for DATABASE_URL (pooled) + DIRECT_URL (direct); confirm Supabase connection via `pnpm db:migrate`
-- [ ] At start of M2, verify Payload 3.x current-recommended Next.js install flow via Context7 before committing to architecture
-- [x] ~~At start of M1, decide on Tailwind v3 vs v4 based on current shadcn/ui compatibility~~ — **Resolved (2026-04-21):** Tailwind v4 used with shadcn base-nova preset (T9, `3f07c3e`). v4 is fully supported.
-- [x] ~~Before starting T12 type hardening: improve test env isolation~~ — **Resolved (2026-04-21):** env.ts uses Zod with runtime validation; tests isolate via manual stubbing.
-- [ ] M2 roadmap: Vercel deployment integration (AD-009 deferred), CMS admin routes + public blog routes
+- [x] ~~Before M2: Set Vercel env scopes for DATABASE_URL (pooled) + DIRECT_URL (direct)~~ — **Resolved (2026-05-01):** postinstall/prebuild scripts use dummy fallbacks; Vercel must have real DATABASE_URL + DIRECT_URL in project env settings
+- [ ] Merge `feature/docker-vercel-fix` to `main` and confirm Vercel build passes
+- [ ] Set Vercel project env vars: `DATABASE_URL` (Supabase pooled, port 6543) and `DIRECT_URL` (Supabase direct, port 5432)
+- [ ] M2: Public blog routes (list page, post detail) using Prisma models
+- [x] ~~At start of M1, decide on Tailwind v3 vs v4 based on current shadcn/ui compatibility~~ — **Resolved (2026-04-21):** Tailwind v4 used with shadcn base-nova preset (T9, `3f07c3e`).
+- [x] ~~Before starting T12 type hardening: improve test env isolation~~ — **Resolved (2026-04-21):** env.ts uses Zod with runtime validation.
 
 ---
+
+## Project Quick Reference
+
+> Load this section at the start of every session before writing any code.
+
+### Branching (GitHub Flow — AD-013)
+
+```
+main ← always deployable, never force-push
+  └── feature/description   ← branch from main, PR to main
+```
+
+- Pre-push hook: auto-rebases feature branch on `main` before push
+- validate.yml: runs on push to `feature/**` + PRs to `main`; auto-creates PR to `main`
+- No develop branch, no promote-to-main workflow
+
+### Package Manager
+
+```bash
+pnpm  # always — never npm or yarn
+```
+
+### Commit Format
+
+```
+type(scope): subject          # Conventional Commits
+# One commit per task
+# Types: feat fix chore docs test refactor perf
+```
+
+### Key Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `pnpm check` | Full CI gate (generate + typecheck + lint + test) |
+| `pnpm dev` | Dev server (Turbopack) |
+| `pnpm db:generate` | Regenerate Prisma client after schema change |
+| `pnpm db:seed` | Seed DB with faker data |
+| `pnpm db:migrate` | Deploy pending migrations |
+
+### Folder Structure
+
+```
+src/
+  app/
+    (public)/         # Public blog routes (Server Components)
+    admin/            # Admin CMS UI
+    api/              # API routes (health, cms/*, docs)
+  cms/
+    schemas/          # Zod validation per model
+    hooks/            # Operation hooks registry
+    utils/            # Normalization helpers
+  components/
+    ui/               # shadcn/ui primitives (Radix)
+    admin/            # Admin-specific components
+    layouts/          # Layout components
+  generated/prisma/   # Prisma client — gitignored, regenerated by db:generate
+  lib/
+    db.ts             # PrismaClient singleton (lazy-init Proxy, PrismaPg adapter)
+  utils/
+    env.ts            # Zod env schema (validated at startup)
+
+tests/unit/           # Mirrors src/ structure exactly
+tests/e2e/            # E2E tests (future)
+tests/setup.ts        # Vitest global setup
+
+prisma/
+  schema.prisma       # DB schema (prisma-client generator → src/generated/prisma)
+  seed.ts             # Deterministic faker seeder (pt-BR locale)
+  migrations/         # Prisma migration files
+prisma.config.ts      # Prisma CLI config (reads .env.local, sets datasource conditionally)
+```
+
+### Test Patterns
+
+```ts
+// Every test file:
+import { describe, it, expect } from "vitest";
+
+describe("module name", () => {
+  it("describes behavior from user perspective", () => {
+    // Arrange
+    const sut = createSystemUnderTest();
+
+    // Act
+    const result = sut.doSomething();
+
+    // Assert
+    expect(result).toBe(expected);
+  });
+});
+
+// Mock Prisma: vi.mock('@/lib/db') — never mock the adapter
+// No any — use unknown + narrowing
+// Test behavior, not internals
+```
+
+### Database
+
+- **Prisma 7** with `prisma-client` generator, output: `src/generated/prisma`
+- Import: `import { PrismaClient } from "@/generated/prisma/client"` — never from `@prisma/client`
+- Adapter: `PrismaPg` from `@prisma/adapter-pg` + `pg`
+- `DATABASE_URL` = pooled (Supabase port 6543, pgBouncer) — runtime queries
+- `DIRECT_URL` = direct (Supabase port 5432) — CLI migrations only
+- Lazy-init Proxy in `src/lib/db.ts` — defers instantiation to first use
+
+### Environment Files
+
+- `.env.local` — local secrets (gitignored, read by prisma.config.ts)
+- `.env.example` — template with all required vars documented
+- `DATABASE_URL` + `DIRECT_URL` required for runtime; omitted = generate-only mode
 
 ## Preferences
 
