@@ -9,7 +9,7 @@ pnpm install
 pnpm dev
 ```
 
-### Branching Strategy
+### Branching Strategy (GitHub Flow)
 
 1. Create feature branch from `main`:
    ```bash
@@ -23,13 +23,13 @@ pnpm dev
    git commit -m "feat(scope): description"
    ```
 
-3. Push and create PR to `develop`:
+3. Push and create PR to `main`:
    ```bash
    git push origin feature/your-feature
-   # Create PR on GitHub, target: develop branch
+   # Create PR on GitHub, target: main branch
    ```
 
-4. After merge to `develop`, `develop` is automatically promoted to `main` via auto-created PR.
+4. Code review → merge to main → auto-deploy
 
 ### Pre-Commit Checks
 
@@ -40,20 +40,20 @@ pnpm format # auto-format code
 
 ### Pre-Push Rebase Hook
 
-When you push a feature branch, a pre-push hook automatically rebases your branch on the latest `develop` to prevent conflicts when opening a PR. This runs silently on successful rebase.
+When you push a feature branch, a pre-push hook automatically rebases your branch on the latest `main` to prevent conflicts when opening a PR. This runs silently on successful rebase.
 
-Non-feature branches (`main`, `develop`) skip the hook.
+Non-feature branches skip the hook.
 
 #### If rebase fails
 
-Conflicts occur when `develop` has moved forward since you created your feature branch. The hook will block your push and log diagnostic steps:
+Conflicts occur when `main` has moved forward since you created your feature branch. The hook will block your push and log diagnostic steps:
 
 ```
 ❌ Rebase failed: conflicts detected on feature/your-branch
 
 Manual fix required:
-  1. git fetch origin develop
-  2. git rebase origin/develop
+  1. git fetch origin main
+  2. git rebase origin/main
   3. Resolve conflicts in your editor
   4. git add .
   5. git rebase --continue
@@ -68,35 +68,10 @@ Follow these steps, then retry `git push`. The hook will rebase again and allow 
 
 ### Workflows
 
-**validate.yml** — Runs on feature branch push and PRs to `develop`
+**validate.yml** — Runs on feature branch push and PRs to `main`
 - Typecheck, lint, format check, tests, Snyk SAST
 - Blocks merge if checks fail
 
-**promote-to-main.yml** — Runs on push to `develop`
-- Auto-rebases `develop` on latest `main`
-- Creates PR `develop` → `main` if rebase succeeds
-- Merge the PR to promote to production
-
-### Auto-Rebase in Promotion Workflow
-
-When your feature branch merges to `develop`, the promotion workflow automatically rebases your branch on the latest `develop` before creating a PR to `main`. This prevents conflicts on `main`.
-
-#### If rebase fails
-
-Rebase conflicts occur when `develop` has diverged (e.g., another feature merged first). The workflow will fail and log diagnostic steps.
-
-Fix locally:
-
-```bash
-git fetch origin develop
-git rebase origin/develop
-# resolve conflicts in your editor
-git add .
-git rebase --continue
-git push --force-with-lease
-```
-
-The workflow will retry automatically on your next commit, or you can manually re-trigger it on GitHub.
 ---
 
 ## Commit Message Format

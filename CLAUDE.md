@@ -32,7 +32,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 pnpm vitest run tests/unit/path/to/file.test.ts
 ```
 
-**Critical:** `pnpm check` must pass before every commit. These same checks run in CI (`validate.yml`) and block PR merges to `develop`.
+**Critical:** `pnpm check` must pass before every commit. These same checks run in CI (`validate.yml`) and block PR merges to `main`.
 
 ## Development Methodology
 
@@ -104,15 +104,20 @@ Standing rules applied to every code change. Violations are flagged, not silentl
 - `GET /sitemap.xml`, `/robots.txt`, `/rss.xml` — Dynamic SEO generators
 - `POST/GET/PUT/DELETE /api/cms/*` — CMS CRUD routes
 
-## Git & Branching
+## Git & Branching (GitHub Flow)
 
-- **`main`** — always deployable; **`develop`** — integration branch
-- Feature branches from `main` → PR to `develop` → auto-promoted to `main` via `promote-to-main.yml`
+- **`main`** — always deployable, production ready
+- Feature branches from `main` → PR to `main` (review → merge → deploy)
 - Conventional Commits (`type(scope): subject`), one commit per task
-- Never force-push to `main` or `develop`
+- Never force-push to `main`
 
+**Workflow:**
 ```bash
-git checkout main && git pull origin main && git checkout -b feature/description
-git fetch origin && git rebase origin/main   # keep up-to-date
-git push --force-with-lease origin feature/description  # after rebase
+git checkout main && git pull origin main
+git checkout -b feature/your-feature
+# Make changes, commit
+git push origin feature/your-feature
+# Open PR on GitHub → review → merge
 ```
+
+**Pre-push hook:** Feature branches auto-rebase on `main` before push (prevents conflicts). Non-feature branches skip the hook.
